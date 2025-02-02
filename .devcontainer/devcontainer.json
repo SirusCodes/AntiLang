@@ -1,0 +1,12 @@
+{
+    "name": "Anti-lang Devcontainer",
+    "dockerFile": "Dockerfile",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "golang.go"
+            ]
+        }
+    }
+}
