@@ -26,6 +26,8 @@ func TestNextToken(t *testing.T) {
 	{i += 1, i < num, 0 = i let} for (
 		
 	)
+
+	&& ||
 `
 
 	tests := []struct {
@@ -127,6 +129,8 @@ func TestNextToken(t *testing.T) {
 		{FOR, "for"},
 		{LPAREN, "("},
 		{RPAREN, ")"},
+		{LOG_AND, "&&"},
+		{LOG_OR, "||"},
 	}
 
 	l := New(input)

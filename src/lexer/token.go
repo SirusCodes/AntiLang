@@ -28,6 +28,9 @@ const (
 	PLUS_EQ  = "+="
 	MINUS_EQ = "-="
 
+	LOG_AND = "&&"
+	LOG_OR  = "||"
+
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"

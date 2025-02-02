@@ -51,6 +51,24 @@ func (l *Lexer) NextToken() Token {
 		tok = newToken(LSQBRAC, l.ch)
 	case ']':
 		tok = newToken(RSQBRAC, l.ch)
+	case '&':
+		if l.peekChar() == '&' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			tok = Token{Type: LOG_AND, Literal: literal}
+		} else {
+			tok = newToken(ILLEGAL, l.ch)
+		}
+	case '|':
+		if l.peekChar() == '|' {
+			ch := l.ch
+			l.readChar()
+			literal := string(ch) + string(l.ch)
+			tok = Token{Type: LOG_OR, Literal: literal}
+		} else {
+			tok = newToken(ILLEGAL, l.ch)
+		}
 	case 0:
 		tok.Literal = ""
 		tok.Type = EOF
