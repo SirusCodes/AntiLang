@@ -30,6 +30,18 @@ func (parser *Parser) parseExpression(precedence int) ast.Expression {
 	return leftExp
 }
 
+func (parser *Parser) parsePrefixExpression() ast.Expression {
+	pe := &ast.PrefixExpression{
+		Token:    parser.curToken,
+		Operator: parser.curToken.Literal,
+	}
+
+	parser.nextToken()
+	pe.Right = parser.parseExpression(PREFIX)
+
+	return pe
+}
+
 func (parser *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	ie := &ast.InfixExpression{
 		Token:    parser.curToken,
