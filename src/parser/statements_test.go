@@ -8,10 +8,11 @@ import (
 	"github.com/SirusCodes/anti-lang/src/ast"
 	"github.com/SirusCodes/anti-lang/src/lexer"
 	"github.com/SirusCodes/anti-lang/src/parser"
+	"github.com/SirusCodes/anti-lang/src/utils"
 )
 
 func TestLetStatement(t *testing.T) {
-	input := ",5 = five let"
+	input := ",5 + 5 = five let"
 
 	lexer := lexer.New(input)
 	parser := parser.New(lexer)
@@ -24,10 +25,7 @@ func TestLetStatement(t *testing.T) {
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	if len(parser.Errors()) != 0 {
-		t.Fatalf("parser has %d errors \n %s", len(parser.Errors()), strings.Join(parser.Errors(), "\n"))
-
-	}
+	utils.CheckParserErrors(t, parser)
 
 	if len(program.Statements) != 1 {
 		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
@@ -48,11 +46,13 @@ func TestLetStatement(t *testing.T) {
 		t.Fatalf("stmt.Name.Value not 'five'. got=%q", ltt.Name.Value)
 	}
 
-	// TODO: Test for value of the expression
+	if ltt.Value.String() != "(5 + 5)" {
+		t.Fatalf("stmt.Value.String() not '5 + 5'. got=%q", ltt.Value.String())
+	}
 }
 
 func TestReturnStatement(t *testing.T) {
-	input := ",5 return"
+	input := ",5 + 5 return"
 
 	lexer := lexer.New(input)
 	parser := parser.New(lexer)
@@ -85,5 +85,7 @@ func TestReturnStatement(t *testing.T) {
 		t.Fatalf("stmt.TokenLiteral not 'return'. got=%q", rtt.TokenLiteral())
 	}
 
-	// TODO: Test for value of the expression
+	if rtt.ReturnValue.String() != "(5 + 5)" {
+		t.Fatalf("stmt.ReturnValue.String() not '5 + 5'. got=%q", rtt.ReturnValue.String())
+	}
 }

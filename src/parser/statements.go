@@ -8,7 +8,7 @@ import (
 func (parser *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	stmt := &ast.ExpressionStatement{Token: parser.curToken}
 
-	stmt.Expression = parser.parseExpression(LOWEST)
+	stmt.Expression = parser.parseExpression(LOWEST, lexer.SEMICOLON)
 
 	return stmt
 }
@@ -44,10 +44,10 @@ func (parser *Parser) parseStatementByComma() ast.Statement {
 func (parser *Parser) parseLetStatement() *ast.LetStatement {
 	letStatement := &ast.LetStatement{}
 
-	for !parser.curTokenIs(lexer.ASSIGN) && !parser.curTokenIs(lexer.EOF) {
-		parser.nextToken()
-	}
+	letStatement.Value = parser.parseExpression(LOWEST, lexer.ASSIGN)
+
 	// move from '=' to var name
+	parser.nextToken()
 	parser.nextToken()
 
 	if !parser.curTokenIs(lexer.IDENT) {
@@ -67,7 +67,7 @@ func (parser *Parser) parseLetStatement() *ast.LetStatement {
 func (parser *Parser) parseReturnStatement() *ast.ReturnStatement {
 	returnStatement := &ast.ReturnStatement{}
 
-	returnStatement.ReturnValue = parser.parseExpression(LOWEST)
+	returnStatement.ReturnValue = parser.parseExpression(LOWEST, lexer.RETURN)
 	parser.nextToken()
 
 	returnStatement.Token = parser.curToken

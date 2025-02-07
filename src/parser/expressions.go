@@ -8,7 +8,8 @@ import (
 	"github.com/SirusCodes/anti-lang/src/lexer"
 )
 
-func (parser *Parser) parseExpression(precedence int) ast.Expression {
+func (parser *Parser) parseExpression(precedence int, endToken lexer.TokenType) ast.Expression {
+
 	prefix := parser.prefixParseFns[parser.curToken.Type]
 	if prefix == nil {
 		msg := fmt.Sprintf("no prefix parse function for %s", parser.curToken.Type)
@@ -17,7 +18,7 @@ func (parser *Parser) parseExpression(precedence int) ast.Expression {
 	}
 	leftExp := prefix()
 
-	for !parser.peekTokenIs(lexer.SEMICOLON) && precedence < parser.peekPrecedence() {
+	for !parser.peekTokenIs(endToken) && precedence < parser.peekPrecedence() {
 		infix := parser.infixParseFns[parser.peekToken.Type]
 		if infix == nil {
 			return leftExp
@@ -37,7 +38,7 @@ func (parser *Parser) parsePrefixExpression() ast.Expression {
 	}
 
 	parser.nextToken()
-	pe.Right = parser.parseExpression(PREFIX)
+	pe.Right = parser.parseExpression(PREFIX, lexer.SEMICOLON)
 
 	return pe
 }
@@ -51,7 +52,7 @@ func (parser *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 
 	precedence := parser.curPrecedence()
 	parser.nextToken()
-	ie.Right = parser.parseExpression(precedence)
+	ie.Right = parser.parseExpression(precedence, lexer.SEMICOLON)
 
 	return ie
 }
@@ -79,7 +80,7 @@ func (parser *Parser) parseBoolean() ast.Expression {
 func (parser *Parser) parseGroupedExpression() ast.Expression {
 	parser.nextToken()
 
-	exp := parser.parseExpression(LOWEST)
+	exp := parser.parseExpression(LOWEST, lexer.SEMICOLON)
 
 	if !parser.peekTokenAndNext(lexer.RBRACE) {
 		return nil
