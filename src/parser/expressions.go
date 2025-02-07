@@ -70,3 +70,7 @@ func (parser *Parser) parseIntegerLiteral() ast.Expression {
 	itl.Value = value
 	return itl
 }
+
+func (parser *Parser) parseBoolean() ast.Expression {
+	return &ast.Boolean{Token: parser.curToken, Value: parser.curTokenIs(lexer.TRUE)}
+}
