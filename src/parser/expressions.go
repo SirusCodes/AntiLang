@@ -1,13 +1,47 @@
 package parser
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/SirusCodes/anti-lang/src/ast"
+	"github.com/SirusCodes/anti-lang/src/lexer"
 )
 
 func (parser *Parser) parseExpression(precedence int) ast.Expression {
-	return nil
+	prefix := parser.prefixParseFns[parser.curToken.Type]
+	if prefix == nil {
+		msg := fmt.Sprintf("no prefix parse function for %s", parser.curToken.Type)
+		parser.errors = append(parser.errors, msg)
+		return nil
+	}
+	leftExp := prefix()
+
+	for !parser.peekTokenIs(lexer.SEMICOLON) && precedence < parser.peekPrecedence() {
+		infix := parser.infixParseFns[parser.peekToken.Type]
+		if infix == nil {
+			return leftExp
+		}
+
+		parser.nextToken()
+		leftExp = infix(leftExp)
+	}
+
+	return leftExp
+}
+
+func (parser *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	ie := &ast.InfixExpression{
+		Token:    parser.curToken,
+		Left:     left,
+		Operator: parser.curToken.Literal,
+	}
+
+	precedence := parser.curPrecedence()
+	parser.nextToken()
+	ie.Right = parser.parseExpression(precedence)
+
+	return ie
 }
 
 func (parser *Parser) parseIntegerLiteral() ast.Expression {

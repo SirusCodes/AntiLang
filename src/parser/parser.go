@@ -21,6 +21,18 @@ const (
 	CALL        // myFunction(X)
 )
 
+var precedences = map[lexer.TokenType]int{
+	lexer.EQ:       EQUALS,
+	lexer.NOT_EQ:   EQUALS,
+	lexer.LT:       LESSGREATER,
+	lexer.GT:       LESSGREATER,
+	lexer.PLUS:     SUM,
+	lexer.MINUS:    SUM,
+	lexer.SLASH:    PRODUCT,
+	lexer.ASTERISK: PRODUCT,
+	lexer.LPAREN:   CALL,
+}
+
 // Defination of parser functions
 type (
 	infixParseFns  map[lexer.TokenType]func(ast.Expression) ast.Expression
@@ -53,6 +65,17 @@ func New(l *lexer.Lexer) *Parser {
 
 	// All infix parse functions
 	parser.infixParseFns = make(infixParseFns)
+	parser.registerInfix(lexer.LOG_AND, parser.parseInfixExpression)
+	parser.registerInfix(lexer.ASTERISK, parser.parseInfixExpression)
+	parser.registerInfix(lexer.EQ, parser.parseInfixExpression)
+	parser.registerInfix(lexer.GT, parser.parseInfixExpression)
+	parser.registerInfix(lexer.LT, parser.parseInfixExpression)
+	parser.registerInfix(lexer.MINUS, parser.parseInfixExpression)
+	parser.registerInfix(lexer.MOD, parser.parseInfixExpression)
+	parser.registerInfix(lexer.NOT_EQ, parser.parseInfixExpression)
+	parser.registerInfix(lexer.LOG_OR, parser.parseInfixExpression)
+	parser.registerInfix(lexer.PLUS, parser.parseInfixExpression)
+	parser.registerInfix(lexer.SLASH, parser.parseInfixExpression)
 
 	return parser
 }
@@ -148,4 +171,20 @@ func (parser *Parser) parseStatement() ast.Statement {
 
 func (parser *Parser) parseIdentifier() ast.Expression {
 	return &ast.Identifier{Token: parser.curToken, Value: parser.curToken.Literal}
+}
+
+func (parser *Parser) peekPrecedence() int {
+	if p, ok := precedences[parser.peekToken.Type]; ok {
+		return p
+	}
+
+	return LOWEST
+}
+
+func (parser *Parser) curPrecedence() int {
+	if p, ok := precedences[parser.curToken.Type]; ok {
+		return p
+	}
+
+	return LOWEST
 }

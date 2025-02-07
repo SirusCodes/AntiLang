@@ -17,6 +17,7 @@ const (
 	BANG     = "!"
 	ASTERISK = "*"
 	SLASH    = "/"
+	MOD      = "%"
 
 	LT = "<"
 	GT = ">"
@@ -27,6 +28,8 @@ const (
 	GT_EQ    = ">="
 	PLUS_EQ  = "+="
 	MINUS_EQ = "-="
+	SLASH_EQ = "/="
+	ASTER_EQ = "*="
 
 	LOG_AND = "&&"
 	LOG_OR  = "||"

@@ -34,9 +34,9 @@ func (l *Lexer) NextToken() Token {
 	case '!':
 		tok = l.makeTwoCharToken(NOT_EQ, BANG)
 	case '/':
-		tok = newToken(SLASH, l.ch)
+		tok = l.makeTwoCharToken(SLASH_EQ, SLASH)
 	case '*':
-		tok = newToken(ASTERISK, l.ch)
+		tok = l.makeTwoCharToken(ASTER_EQ, ASTERISK)
 	case '<':
 		tok = l.makeTwoCharToken(LT_EQ, LT)
 	case '>':
@@ -57,6 +57,8 @@ func (l *Lexer) NextToken() Token {
 		tok = newToken(LSQBRAC, l.ch)
 	case ']':
 		tok = newToken(RSQBRAC, l.ch)
+	case '%':
+		tok = newToken(MOD, l.ch)
 	case '&':
 		if l.peekChar() == '&' {
 			ch := l.ch

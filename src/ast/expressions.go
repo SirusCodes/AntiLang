@@ -16,3 +16,21 @@ func (il *IntegerLiteral) TokenLiteral() string {
 func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
+
+// InfixExpression represents an infix expression
+type InfixExpression struct {
+	Token    lexer.Token
+	Left     Expression
+	Operator string
+	Right    Expression
+}
+
+func (ie *InfixExpression) expressionNode() {}
+
+func (ie *InfixExpression) TokenLiteral() string {
+	return ie.Token.Literal
+}
+
+func (ie *InfixExpression) String() string {
+	return "(" + ie.Left.String() + " " + ie.Operator + " " + ie.Right.String() + ")"
+}
