@@ -45,3 +45,25 @@ func (ls *LetStatement) String() string {
 
 	return out
 }
+
+// RETURN statement
+type ReturnStatement struct {
+	Token       lexer.Token // the 'return' token
+	ReturnValue Expression
+}
+
+func (rs *ReturnStatement) statementNode() {}
+
+func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
+
+func (rs *ReturnStatement) String() string {
+	var out string
+
+	out += ","
+	if rs.ReturnValue != nil {
+		out += rs.ReturnValue.String() + " "
+	}
+	out += rs.TokenLiteral()
+
+	return out
+}

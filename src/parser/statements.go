@@ -33,7 +33,7 @@ func (parser *Parser) parseStatementByComma() ast.Statement {
 	case lexer.LET:
 		return parser.parseLetStatement()
 	case lexer.RETURN:
-		// TODO: Implement Return statement
+		return parser.parseReturnStatement()
 	default:
 		parser.addGenericError("parser: expected token to be LET or RETURN, got " + token.Literal + " instead")
 	}
@@ -62,4 +62,15 @@ func (parser *Parser) parseLetStatement() *ast.LetStatement {
 	letStatement.Token = parser.curToken
 
 	return letStatement
+}
+
+func (parser *Parser) parseReturnStatement() *ast.ReturnStatement {
+	returnStatement := &ast.ReturnStatement{}
+
+	returnStatement.ReturnValue = parser.parseExpression(LOWEST)
+	parser.nextToken()
+
+	returnStatement.Token = parser.curToken
+
+	return returnStatement
 }

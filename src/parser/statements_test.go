@@ -50,3 +50,40 @@ func TestLetStatement(t *testing.T) {
 
 	// TODO: Test for value of the expression
 }
+
+func TestReturnStatement(t *testing.T) {
+	input := ",5 return"
+
+	lexer := lexer.New(input)
+	parser := parser.New(lexer)
+
+	program := parser.ParseProgram()
+
+	fmt.Println(program)
+
+	if program == nil {
+		t.Fatalf("ParseProgram() returned nil")
+	}
+
+	if len(parser.Errors()) != 0 {
+		t.Fatalf("parser has %d errors \n %s", len(parser.Errors()), strings.Join(parser.Errors(), "\n"))
+
+	}
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
+	}
+
+	stmt := program.Statements[0]
+	rtt, ok := stmt.(*ast.ReturnStatement)
+
+	if !ok {
+		t.Fatalf("stmt not *parser.ReturnStatement. got=%T", stmt)
+	}
+
+	if rtt.TokenLiteral() != "return" {
+		t.Fatalf("stmt.TokenLiteral not 'return'. got=%q", rtt.TokenLiteral())
+	}
+
+	// TODO: Test for value of the expression
+}
