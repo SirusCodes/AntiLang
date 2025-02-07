@@ -74,3 +74,16 @@ func (parser *Parser) parseIntegerLiteral() ast.Expression {
 func (parser *Parser) parseBoolean() ast.Expression {
 	return &ast.Boolean{Token: parser.curToken, Value: parser.curTokenIs(lexer.TRUE)}
 }
+
+// TODO: check if you can implement a way to handle function in this
+func (parser *Parser) parseGroupedExpression() ast.Expression {
+	parser.nextToken()
+
+	exp := parser.parseExpression(LOWEST)
+
+	if !parser.peekTokenAndNext(lexer.RBRACE) {
+		return nil
+	}
+
+	return exp
+}

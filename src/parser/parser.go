@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/SirusCodes/anti-lang/src/ast"
 	"github.com/SirusCodes/anti-lang/src/lexer"
 )
@@ -30,7 +32,7 @@ var precedences = map[lexer.TokenType]int{
 	lexer.MINUS:    SUM,
 	lexer.SLASH:    PRODUCT,
 	lexer.ASTERISK: PRODUCT,
-	lexer.LPAREN:   CALL,
+	lexer.LBRACE:   CALL,
 }
 
 // Defination of parser functions
@@ -66,6 +68,7 @@ func New(l *lexer.Lexer) *Parser {
 	parser.registerPrefix(lexer.MINUS, parser.parsePrefixExpression)
 	parser.registerPrefix(lexer.TRUE, parser.parseBoolean)
 	parser.registerPrefix(lexer.FALSE, parser.parseBoolean)
+	parser.registerPrefix(lexer.LBRACE, parser.parseGroupedExpression)
 
 	// All infix parse functions
 	parser.infixParseFns = make(infixParseFns)
@@ -121,7 +124,7 @@ func (parser *Parser) addGenericError(message string) {
 }
 
 func (parser *Parser) addError(t lexer.TokenType) {
-	msg := "parser: expected next token to be %s, got %s instead"
+	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, parser.peekToken.Type)
 	parser.errors = append(parser.errors, msg)
 }
 

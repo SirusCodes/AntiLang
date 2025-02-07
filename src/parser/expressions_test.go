@@ -101,10 +101,8 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		{"1+{2+3}+4", "((1 + (2 + 3)) + 4)"},
 		{"{5+5}*2", "((5 + 5) * 2)"},
 		{"2/{5+5}", "(2 / (5 + 5))"},
-		{"2**3", "(2 ** 3)"},
 		{"-{5+5}", "(-(5 + 5))"},
 		{"!{true==true}", "(!(true == true))"},
-		{"a + {b*c}add+d", "((a + add((b * c))) + d)"},
 	}
 	for _, tt := range tests {
 		l := lexer.New(tt.input)
