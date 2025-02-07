@@ -7,6 +7,12 @@ type Lexer struct {
 	ch           byte // current char under examination
 }
 
+var (
+	tempPosition     int
+	tempReadPosition int
+	tempCh           byte
+)
+
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
@@ -88,6 +94,29 @@ func (l *Lexer) NextToken() Token {
 
 	l.readChar()
 	return tok
+}
+
+func (l *Lexer) MoveReaderForTemp(fn func()) {
+	l.saveTokenState()
+	defer l.restoreTokenState()
+
+	fn()
+}
+
+func (l *Lexer) saveTokenState() {
+	tempPosition = l.position
+	tempReadPosition = l.readPosition
+	tempCh = l.ch
+}
+
+func (l *Lexer) restoreTokenState() {
+	l.position = tempPosition
+	l.readPosition = tempReadPosition
+	l.ch = tempCh
+
+	tempCh = 0
+	tempPosition = 0
+	tempReadPosition = 0
 }
 
 func (l *Lexer) skipWhitespace() {

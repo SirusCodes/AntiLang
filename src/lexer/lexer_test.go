@@ -1,7 +1,9 @@
-package lexer
+package lexer_test
 
 import (
 	"testing"
+
+	. "github.com/SirusCodes/anti-lang/src/lexer"
 )
 
 func TestNextToken(t *testing.T) {
@@ -147,5 +149,33 @@ func TestNextToken(t *testing.T) {
 			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q",
 				i, tt.expectedLiteral, tok.Literal)
 		}
+	}
+}
+
+func TestSaveRestoreLexer(t *testing.T) {
+	input := "=+(){}[],;"
+
+	l := New(input)
+
+	tok := l.NextToken()
+	if tok.Type != ASSIGN {
+		t.Fatalf("expected =, got %q", tok.Literal)
+	}
+
+	l.MoveReaderForTemp(func() {
+		tok = l.NextToken()
+		if tok.Type != PLUS {
+			t.Fatalf("expected +, got %q", tok.Literal)
+		}
+
+		tok = l.NextToken()
+		if tok.Type != LPAREN {
+			t.Fatalf("expected (, got %q", tok.Literal)
+		}
+	})
+
+	tok = l.NextToken()
+	if tok.Type != PLUS {
+		t.Fatalf("expected +, got %q", tok.Literal)
 	}
 }

@@ -1,0 +1,63 @@
+package ast
+
+import (
+	"bytes"
+
+	"github.com/SirusCodes/anti-lang/src/lexer"
+)
+
+// Node is the interface that all nodes in the AST implement
+type Node interface {
+	TokenLiteral() string
+	String() string
+}
+
+// Statement is the interface that all statement nodes in the AST implement
+type Statement interface {
+	Node
+	statementNode()
+}
+
+// Expression is the interface that all expression nodes in the AST implement
+type Expression interface {
+	Node
+	expressionNode()
+}
+
+// Identifier is the AST node that represents an identifier
+type Identifier struct {
+	Token lexer.Token
+	Value string
+}
+
+func (i *Identifier) expressionNode() {}
+
+func (i *Identifier) TokenLiteral() string {
+	return i.Token.Literal
+}
+
+func (i *Identifier) String() string {
+	return i.Value
+}
+
+// Program is the root node of every AST that the parser produces
+type Program struct {
+	Statements []Statement
+}
+
+// TokenLiteral returns the token literal of the first statement in the program
+func (p *Program) TokenLiteral() string {
+	if len(p.Statements) > 0 {
+		return p.Statements[0].TokenLiteral()
+	}
+	return ""
+}
+
+// String returns the string representation of the program
+func (p *Program) String() string {
+	var out bytes.Buffer
+	for _, s := range p.Statements {
+		out.WriteString(s.String())
+	}
+	return out.String()
+}
