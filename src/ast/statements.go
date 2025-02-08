@@ -40,8 +40,8 @@ func (ls *LetStatement) String() string {
 		out += ls.Value.String()
 	}
 	out += " = "
-	out += ls.TokenLiteral() + " "
-	out += ls.Name.String()
+	out += ls.Name.String() + " "
+	out += ls.TokenLiteral()
 
 	return out
 }
@@ -81,9 +81,11 @@ func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
 func (bs *BlockStatement) String() string {
 	var out string
 
+	out += "["
 	for _, s := range bs.Statements {
 		out += s.String()
 	}
+	out += "]"
 
 	return out
 }
