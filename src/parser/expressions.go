@@ -78,22 +78,77 @@ func (parser *Parser) parseBoolean() ast.Expression {
 
 func (parser *Parser) parseLBraceExpression() ast.Expression {
 	var token lexer.Token
+	var isFuncDef bool
 	parser.peekTokenTemp(func() {
 		for !parser.curTokenIs(lexer.RBRACE) {
 			parser.nextToken()
 		}
 
-		token = parser.peekToken
+		parser.nextToken()
+
+		token = parser.curToken
+		isFuncDef = parser.peekTokenIs(lexer.FUNCTION)
 	})
 
 	switch token.Type {
 	case lexer.IDENT:
+		if isFuncDef {
+			return parser.parseFunctionExpression()
+		}
 		return parser.parseCallExpression()
 	case lexer.IF:
 		return parser.parseIfExpression()
 	default:
 		return parser.parseGroupedExpression()
 	}
+}
+
+func (parser *Parser) parseFunctionExpression() ast.Expression {
+	fe := &ast.FunctionExpression{}
+
+	fe.Parameters = parser.parseFunctionParameters()
+
+	parser.nextToken()
+
+	fe.Token = parser.curToken
+
+	parser.nextToken()
+
+	if !parser.peekTokenAndNext(lexer.LSQBRAC) {
+		parser.addError(lexer.LSQBRAC)
+		return nil
+	}
+
+	fe.Body = parser.parseBlockStatement()
+
+	return fe
+}
+
+func (parser *Parser) parseFunctionParameters() []*ast.Identifier {
+	var identifiers []*ast.Identifier
+
+	if parser.peekTokenIs(lexer.RBRACE) {
+		parser.nextToken()
+		return identifiers
+	}
+
+	parser.nextToken()
+
+	ident := &ast.Identifier{Token: parser.curToken, Value: parser.curToken.Literal}
+	identifiers = append(identifiers, ident)
+
+	for parser.peekTokenIs(lexer.SEMICOLON) {
+		parser.nextToken()
+		parser.nextToken()
+		ident := &ast.Identifier{Token: parser.curToken, Value: parser.curToken.Literal}
+		identifiers = append(identifiers, ident)
+	}
+
+	if !parser.peekTokenAndNext(lexer.RBRACE) {
+		return nil
+	}
+
+	return identifiers
 }
 
 func (parser *Parser) parseIfExpression() ast.Expression {

@@ -95,6 +95,37 @@ func (i *IfExpression) String() string {
 	return out.String()
 }
 
+// FunctionExpression represents a function expression
+type FunctionExpression struct {
+	Token      lexer.Token
+	Parameters []*Identifier
+	Body       *BlockStatement
+}
+
+func (fe *FunctionExpression) expressionNode() {}
+
+func (fe *FunctionExpression) TokenLiteral() string {
+	return fe.Token.Literal
+}
+
+func (fe *FunctionExpression) String() string {
+	var out bytes.Buffer
+	var params []string
+
+	for _, p := range fe.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(params, "; "))
+	out.WriteString("}")
+	out.WriteString(fe.TokenLiteral())
+	out.WriteString("func")
+	out.WriteString(fe.Body.String())
+
+	return out.String()
+}
+
 // IntegerLiteral represents an integer literal
 type IntegerLiteral struct {
 	Token lexer.Token
