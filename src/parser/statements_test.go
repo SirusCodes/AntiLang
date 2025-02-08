@@ -1,7 +1,6 @@
 package parser_test
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -18,8 +17,6 @@ func TestLetStatement(t *testing.T) {
 	parser := parser.New(lexer)
 
 	program := parser.ParseProgram()
-
-	fmt.Println(program)
 
 	if program == nil {
 		t.Fatalf("ParseProgram() returned nil")
@@ -58,8 +55,6 @@ func TestReturnStatement(t *testing.T) {
 	parser := parser.New(lexer)
 
 	program := parser.ParseProgram()
-
-	fmt.Println(program)
 
 	if program == nil {
 		t.Fatalf("ParseProgram() returned nil")

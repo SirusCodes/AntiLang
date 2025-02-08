@@ -68,7 +68,7 @@ func New(l *lexer.Lexer) *Parser {
 	parser.registerPrefix(lexer.MINUS, parser.parsePrefixExpression)
 	parser.registerPrefix(lexer.TRUE, parser.parseBoolean)
 	parser.registerPrefix(lexer.FALSE, parser.parseBoolean)
-	parser.registerPrefix(lexer.LBRACE, parser.parseGroupedExpression)
+	parser.registerPrefix(lexer.LBRACE, parser.parseLBraceExpression)
 
 	// All infix parse functions
 	parser.infixParseFns = make(infixParseFns)

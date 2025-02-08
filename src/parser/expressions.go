@@ -76,7 +76,57 @@ func (parser *Parser) parseBoolean() ast.Expression {
 	return &ast.Boolean{Token: parser.curToken, Value: parser.curTokenIs(lexer.TRUE)}
 }
 
-// TODO: check if you can implement a way to handle function in this
+func (parser *Parser) parseLBraceExpression() ast.Expression {
+	var token lexer.Token
+	parser.peekTokenTemp(func() {
+		for !parser.curTokenIs(lexer.RBRACE) {
+			parser.nextToken()
+		}
+
+		token = parser.peekToken
+	})
+
+	switch token.Type {
+	case lexer.IDENT:
+		return parser.parseCallExpression()
+	default:
+		return parser.parseGroupedExpression()
+	}
+}
+
+func (parser *Parser) parseCallExpression() ast.Expression {
+	ce := &ast.CallExpression{}
+	ce.Arguments = parser.parseExpressionList(lexer.RBRACE)
+	parser.nextToken()
+	ce.Function = parser.parseIdentifier().(*ast.Identifier)
+	ce.Token = parser.curToken
+	return ce
+}
+
+func (parser *Parser) parseExpressionList(end lexer.TokenType) []ast.Expression {
+	var list []ast.Expression
+
+	if parser.peekTokenIs(end) {
+		parser.nextToken()
+		return list
+	}
+
+	parser.nextToken()
+	list = append(list, parser.parseExpression(LOWEST, lexer.SEMICOLON))
+
+	for parser.peekTokenIs(lexer.SEMICOLON) {
+		parser.nextToken()
+		parser.nextToken()
+		list = append(list, parser.parseExpression(LOWEST, lexer.SEMICOLON))
+	}
+
+	if !parser.peekTokenAndNext(end) {
+		return nil
+	}
+
+	return list
+}
+
 func (parser *Parser) parseGroupedExpression() ast.Expression {
 	parser.nextToken()
 

@@ -1,6 +1,33 @@
 package ast
 
-import "github.com/SirusCodes/anti-lang/src/lexer"
+import (
+	"strings"
+
+	"github.com/SirusCodes/anti-lang/src/lexer"
+)
+
+// CallExpression represents a function call expression
+type CallExpression struct {
+	Token     lexer.Token
+	Function  Expression
+	Arguments []Expression
+}
+
+func (ce *CallExpression) expressionNode() {}
+
+func (ce *CallExpression) TokenLiteral() string {
+	return ce.Token.Literal
+}
+
+func (ce *CallExpression) String() string {
+	var args []string
+
+	for _, arg := range ce.Arguments {
+		args = append(args, arg.String())
+	}
+
+	return "(" + "{" + strings.Join(args, ";") + "}" + ce.Function.String() + ")"
+}
 
 // InfixExpression represents an infix expression
 type InfixExpression struct {
