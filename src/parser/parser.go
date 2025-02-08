@@ -170,7 +170,8 @@ func (parser *Parser) parseStatement() ast.Statement {
 	switch parser.curToken.Type {
 	case lexer.COMMA:
 		return parser.parseStatementByComma()
-
+	case lexer.LSQBRAC:
+		return parser.parseBlockStatement()
 	default:
 		return parser.parseExpressionStatement()
 	}

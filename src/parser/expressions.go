@@ -89,9 +89,53 @@ func (parser *Parser) parseLBraceExpression() ast.Expression {
 	switch token.Type {
 	case lexer.IDENT:
 		return parser.parseCallExpression()
+	case lexer.IF:
+		return parser.parseIfExpression()
 	default:
 		return parser.parseGroupedExpression()
 	}
+}
+
+func (parser *Parser) parseIfExpression() ast.Expression {
+	ifExp := &ast.IfExpression{}
+
+	if !parser.curTokenIsAndNext(lexer.LBRACE) {
+		parser.addError(lexer.LBRACE)
+		return nil
+	}
+
+	ifExp.Condition = parser.parseExpression(LOWEST, lexer.RBRACE)
+
+	parser.nextToken()
+
+	if !parser.peekTokenAndNext(lexer.IF) {
+		parser.addError(lexer.IF)
+		return nil
+	}
+
+	ifExp.Token = parser.curToken
+
+	if !parser.peekTokenIs(lexer.LSQBRAC) {
+		parser.addError(lexer.LSQBRAC)
+		return nil
+	}
+
+	parser.nextToken()
+
+	ifExp.Consequence = parser.parseBlockStatement()
+
+	if parser.peekTokenIs(lexer.ELSE) {
+		parser.nextToken()
+
+		if !parser.peekTokenAndNext(lexer.LSQBRAC) {
+			parser.addError(lexer.LSQBRAC)
+			return nil
+		}
+
+		ifExp.Alternative = parser.parseBlockStatement()
+	}
+
+	return ifExp
 }
 
 func (parser *Parser) parseCallExpression() ast.Expression {

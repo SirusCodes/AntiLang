@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"bytes"
 	"strings"
 
 	"github.com/SirusCodes/anti-lang/src/lexer"
@@ -62,6 +63,36 @@ func (pe *PrefixExpression) TokenLiteral() string {
 
 func (pe *PrefixExpression) String() string {
 	return "(" + pe.Operator + pe.Right.String() + ")"
+}
+
+// IfExpression represents an if expression
+type IfExpression struct {
+	Token       lexer.Token
+	Condition   Expression
+	Consequence *BlockStatement
+	Alternative *BlockStatement
+}
+
+func (i *IfExpression) expressionNode() {}
+
+func (i *IfExpression) TokenLiteral() string {
+	return i.Token.Literal
+}
+
+func (i *IfExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(i.Condition.String())
+	out.WriteString("if")
+	out.WriteString(" ")
+	out.WriteString(i.Consequence.String())
+
+	if i.Alternative != nil {
+		out.WriteString("else")
+		out.WriteString(i.Alternative.String())
+	}
+
+	return out.String()
 }
 
 // IntegerLiteral represents an integer literal

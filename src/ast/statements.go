@@ -67,3 +67,23 @@ func (rs *ReturnStatement) String() string {
 
 	return out
 }
+
+// BLOCK statement
+type BlockStatement struct {
+	Token      lexer.Token // the '[' token
+	Statements []Statement
+}
+
+func (bs *BlockStatement) statementNode() {}
+
+func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
+
+func (bs *BlockStatement) String() string {
+	var out string
+
+	for _, s := range bs.Statements {
+		out += s.String()
+	}
+
+	return out
+}

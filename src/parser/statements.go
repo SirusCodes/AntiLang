@@ -74,3 +74,19 @@ func (parser *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 	return returnStatement
 }
+
+func (parser *Parser) parseBlockStatement() *ast.BlockStatement {
+	block := &ast.BlockStatement{Token: parser.curToken}
+
+	parser.nextToken()
+
+	for !parser.curTokenIs(lexer.RSQBRAC) && !parser.curTokenIs(lexer.EOF) {
+		stmt := parser.parseStatement()
+		if stmt != nil {
+			block.Statements = append(block.Statements, stmt)
+		}
+		parser.nextToken()
+	}
+
+	return block
+}
