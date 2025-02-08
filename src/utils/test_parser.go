@@ -3,8 +3,23 @@ package utils
 import (
 	"testing"
 
+	"github.com/SirusCodes/anti-lang/src/ast"
+	"github.com/SirusCodes/anti-lang/src/lexer"
 	"github.com/SirusCodes/anti-lang/src/parser"
 )
+
+func ParseInput(t *testing.T, input string) *ast.Program {
+	lexer := lexer.New(input)
+	parser := parser.New(lexer)
+	program := parser.ParseProgram()
+
+	if program == nil {
+		t.Fatalf("ParseProgram() returned nil")
+	}
+
+	CheckParserErrors(t, parser)
+	return program
+}
 
 func CheckParserErrors(t *testing.T, p *parser.Parser) {
 	errors := p.Errors()

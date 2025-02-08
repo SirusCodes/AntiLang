@@ -5,8 +5,6 @@ import (
 	"testing"
 
 	"github.com/SirusCodes/anti-lang/src/ast"
-	"github.com/SirusCodes/anti-lang/src/lexer"
-	"github.com/SirusCodes/anti-lang/src/parser"
 	"github.com/SirusCodes/anti-lang/src/utils"
 )
 
@@ -20,10 +18,8 @@ func TestParsingPrefixExpression(t *testing.T) {
 		{"-15", "-", 15},
 	}
 	for _, tt := range prefixTests {
-		l := lexer.New(tt.input)
-		p := parser.New(l)
-		program := p.ParseProgram()
-		utils.CheckParserErrors(t, p)
+		program := utils.ParseInput(t, tt.input)
+
 		if len(program.Statements) != 1 {
 			t.Fatalf("program.Statements does not contain %d statements. got=%d\n", 1, len(program.Statements))
 		}
@@ -61,13 +57,11 @@ func TestParsingInfixExpression(t *testing.T) {
 		{"5!=5", 5, "!=", 5},
 	}
 	for _, tt := range infixTests {
-		l := lexer.New(tt.input)
-		p := parser.New(l)
-		program := p.ParseProgram()
+		program := utils.ParseInput(t, tt.input)
+
 		if len(program.Statements) != 1 {
 			t.Fatalf("program.Statements does not contain %d statements. got=%d\n", 1, len(program.Statements))
 		}
-		utils.CheckParserErrors(t, p)
 		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 		if !ok {
 			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
@@ -106,10 +100,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		{"a + {b; c}add + d", "((a + ({b;c}add)) + d)"},
 	}
 	for _, tt := range tests {
-		l := lexer.New(tt.input)
-		p := parser.New(l)
-		program := p.ParseProgram()
-		utils.CheckParserErrors(t, p)
+		program := utils.ParseInput(t, tt.input)
 		actual := program.String()
 		if actual != tt.expected {
 			t.Errorf("expected=%q, got=%q", tt.expected, actual)
@@ -119,25 +110,18 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 
 func TestIfExpression(t *testing.T) {
 	input := "{x < y} if [ b ]"
-
-	l := lexer.New(input)
-	p := parser.New(l)
-	program := p.ParseProgram()
-
-	utils.CheckParserErrors(t, p)
+	program := utils.ParseInput(t, input)
 
 	if len(program.Statements) != 1 {
 		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
 	}
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-
 	if !ok {
 		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
 	exp, ok := stmt.Expression.(*ast.IfExpression)
-
 	if !ok {
 		t.Fatalf("stmt.Expression is not ast.IfExpression. got=%T", stmt.Expression)
 	}
@@ -151,7 +135,6 @@ func TestIfExpression(t *testing.T) {
 	}
 
 	consequence, ok := exp.Consequence.Statements[0].(*ast.ExpressionStatement)
-
 	if !ok {
 		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.Consequence.Statements[0])
 	}
@@ -167,25 +150,18 @@ func TestIfExpression(t *testing.T) {
 
 func TestIfElseExpression(t *testing.T) {
 	input := "{x < y} if [ b ] else [ c ]"
-
-	l := lexer.New(input)
-	p := parser.New(l)
-	program := p.ParseProgram()
-
-	utils.CheckParserErrors(t, p)
+	program := utils.ParseInput(t, input)
 
 	if len(program.Statements) != 1 {
 		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
 	}
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
-
 	if !ok {
 		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
 	exp, ok := stmt.Expression.(*ast.IfExpression)
-
 	if !ok {
 		t.Fatalf("stmt.Expression is not ast.IfExpression. got=%T", stmt.Expression)
 	}
@@ -199,7 +175,6 @@ func TestIfElseExpression(t *testing.T) {
 	}
 
 	consequence, ok := exp.Consequence.Statements[0].(*ast.ExpressionStatement)
-
 	if !ok {
 		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.Consequence.Statements[0])
 	}
@@ -213,7 +188,6 @@ func TestIfElseExpression(t *testing.T) {
 	}
 
 	alternative, ok := exp.Alternative.Statements[0].(*ast.ExpressionStatement)
-
 	if !ok {
 		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.Alternative.Statements[0])
 	}
@@ -224,7 +198,6 @@ func TestIfElseExpression(t *testing.T) {
 }
 
 // HELPER FUNCTIONS
-
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)
 	if !ok {
