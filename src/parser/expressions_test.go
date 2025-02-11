@@ -237,6 +237,44 @@ func TestFunctionExpressionParsing(t *testing.T) {
 	testInfixExpression(t, bodyStmt.ReturnValue, "x", "+", "y")
 }
 
+func TestWhileExpressionParsing(t *testing.T) {
+	input := "{x < y} while [ ,b return ]"
+
+	program := utils.ParseInput(t, input)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	whileExp, ok := stmt.Expression.(*ast.WhileExpression)
+
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.WhileExpression. got=%T", stmt.Expression)
+	}
+
+	if !testInfixExpression(t, whileExp.Condition, "x", "<", "y") {
+		return
+	}
+
+	if len(whileExp.Body.Statements) != 1 {
+		t.Fatalf("whileExp.Body.Statements has not 1 statements. got=%d\n", len(whileExp.Body.Statements))
+	}
+
+	bodyStmt, ok := whileExp.Body.Statements[0].(*ast.ReturnStatement)
+
+	if !ok {
+		t.Fatalf("while body stmt is not ast.ReturnStatement. got=%T", whileExp.Body.Statements[0])
+	}
+
+	testIdentifier(t, bodyStmt.ReturnValue, "b")
+}
+
 // HELPER FUNCTIONS
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)

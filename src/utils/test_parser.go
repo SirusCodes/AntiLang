@@ -17,11 +17,11 @@ func ParseInput(t *testing.T, input string) *ast.Program {
 		t.Fatalf("ParseProgram() returned nil")
 	}
 
-	CheckParserErrors(t, parser)
+	checkParserErrors(t, parser)
 	return program
 }
 
-func CheckParserErrors(t *testing.T, p *parser.Parser) {
+func checkParserErrors(t *testing.T, p *parser.Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
 		return

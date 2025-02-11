@@ -98,6 +98,8 @@ func (parser *Parser) parseLBraceExpression() ast.Expression {
 		return parser.parseCallExpression()
 	case lexer.IF:
 		return parser.parseIfExpression()
+	case lexer.WHILE:
+		return parser.parseWhileExpression()
 	default:
 		return parser.parseGroupedExpression()
 	}
@@ -236,4 +238,26 @@ func (parser *Parser) parseGroupedExpression() ast.Expression {
 	}
 
 	return exp
+}
+
+func (parser *Parser) parseWhileExpression() ast.Expression {
+	we := &ast.WhileExpression{}
+
+	if !parser.curTokenIsAndNext(lexer.LBRACE) {
+		return nil
+	}
+
+	we.Condition = parser.parseExpression(LOWEST, lexer.RBRACE)
+
+	parser.nextToken()
+	we.Token = parser.curToken
+	parser.nextToken()
+
+	if !parser.peekTokenAndNext(lexer.LSQBRAC) {
+		return nil
+	}
+
+	we.Body = parser.parseBlockStatement()
+
+	return we
 }
