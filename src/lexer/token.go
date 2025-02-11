@@ -54,6 +54,7 @@ const (
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
 	FOR      = "FOR"
+	WHILE    = "WHILE"
 )
 
 type Token struct {
@@ -70,6 +71,7 @@ var keywords = map[string]TokenType{
 	"else":   ELSE,
 	"return": RETURN,
 	"for":    FOR,
+	"while":  WHILE,
 }
 
 func LookupIdent(ident string) TokenType {
