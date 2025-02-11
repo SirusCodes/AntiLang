@@ -7,14 +7,28 @@ import (
 	"github.com/SirusCodes/anti-lang/src/lexer"
 )
 
+// Identifier is the AST node that represents an identifier
+type Identifier struct {
+	Expression
+	Token lexer.Token
+	Value string
+}
+
+func (i *Identifier) TokenLiteral() string {
+	return i.Token.Literal
+}
+
+func (i *Identifier) String() string {
+	return i.Value
+}
+
 // CallExpression represents a function call expression
 type CallExpression struct {
+	Expression
 	Token     lexer.Token
 	Function  Expression
 	Arguments []Expression
 }
-
-func (ce *CallExpression) expressionNode() {}
 
 func (ce *CallExpression) TokenLiteral() string {
 	return ce.Token.Literal
@@ -32,13 +46,12 @@ func (ce *CallExpression) String() string {
 
 // InfixExpression represents an infix expression
 type InfixExpression struct {
+	Expression
 	Token    lexer.Token
 	Left     Expression
 	Operator string
 	Right    Expression
 }
-
-func (ie *InfixExpression) expressionNode() {}
 
 func (ie *InfixExpression) TokenLiteral() string {
 	return ie.Token.Literal
@@ -50,12 +63,11 @@ func (ie *InfixExpression) String() string {
 
 // PrefixExpression represents a prefix expression
 type PrefixExpression struct {
+	Expression
 	Token    lexer.Token
 	Operator string
 	Right    Expression
 }
-
-func (pe *PrefixExpression) expressionNode() {}
 
 func (pe *PrefixExpression) TokenLiteral() string {
 	return pe.Token.Literal
@@ -67,13 +79,12 @@ func (pe *PrefixExpression) String() string {
 
 // IfExpression represents an if expression
 type IfExpression struct {
+	Expression
 	Token       lexer.Token
 	Condition   Expression
 	Consequence *BlockStatement
 	Alternative *BlockStatement
 }
-
-func (i *IfExpression) expressionNode() {}
 
 func (i *IfExpression) TokenLiteral() string {
 	return i.Token.Literal
@@ -97,12 +108,11 @@ func (i *IfExpression) String() string {
 
 // FunctionExpression represents a function expression
 type FunctionExpression struct {
+	Expression
 	Token      lexer.Token
 	Parameters []*Identifier
 	Body       *BlockStatement
 }
-
-func (fe *FunctionExpression) expressionNode() {}
 
 func (fe *FunctionExpression) TokenLiteral() string {
 	return fe.Token.Literal
@@ -128,12 +138,11 @@ func (fe *FunctionExpression) String() string {
 
 // WhileExpression represents a while expression
 type WhileExpression struct {
+	Expression
 	Token     lexer.Token
 	Condition Expression
 	Body      *BlockStatement
 }
-
-func (we *WhileExpression) expressionNode() {}
 
 func (we *WhileExpression) TokenLiteral() string {
 	return we.Token.Literal
@@ -153,11 +162,10 @@ func (we *WhileExpression) String() string {
 
 // IntegerLiteral represents an integer literal
 type IntegerLiteral struct {
+	Expression
 	Token lexer.Token
 	Value int64
 }
-
-func (il *IntegerLiteral) expressionNode() {}
 
 func (il *IntegerLiteral) TokenLiteral() string {
 	return il.Token.Literal
@@ -169,11 +177,10 @@ func (il *IntegerLiteral) String() string {
 
 // Boolean represents a boolean literal
 type Boolean struct {
+	Expression
 	Token lexer.Token
 	Value bool
 }
-
-func (b *Boolean) expressionNode() {}
 
 func (b *Boolean) TokenLiteral() string {
 	return b.Token.Literal

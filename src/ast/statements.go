@@ -3,13 +3,11 @@ package ast
 import "github.com/SirusCodes/anti-lang/src/lexer"
 
 // EXPRESSION statement
-
 type ExpressionStatement struct {
+	Statement
 	Token      lexer.Token
 	Expression Expression
 }
-
-func (es *ExpressionStatement) statementNode() {}
 
 func (es *ExpressionStatement) TokenLiteral() string { return es.Token.Literal }
 
@@ -23,12 +21,11 @@ func (es *ExpressionStatement) String() string {
 //  LET statement
 
 type LetStatement struct {
+	Statement
 	Token lexer.Token // the token.LET token
 	Name  *Identifier
 	Value Expression
 }
-
-func (ls *LetStatement) statementNode() {}
 
 func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal }
 
@@ -48,11 +45,10 @@ func (ls *LetStatement) String() string {
 
 // RETURN statement
 type ReturnStatement struct {
+	Statement
 	Token       lexer.Token // the 'return' token
 	ReturnValue Expression
 }
-
-func (rs *ReturnStatement) statementNode() {}
 
 func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
 
@@ -70,11 +66,10 @@ func (rs *ReturnStatement) String() string {
 
 // BLOCK statement
 type BlockStatement struct {
+	Statement
 	Token      lexer.Token // the '[' token
 	Statements []Statement
 }
-
-func (bs *BlockStatement) statementNode() {}
 
 func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
 

@@ -2,8 +2,6 @@ package ast
 
 import (
 	"bytes"
-
-	"github.com/SirusCodes/anti-lang/src/lexer"
 )
 
 // Node is the interface that all nodes in the AST implement
@@ -24,24 +22,9 @@ type Expression interface {
 	expressionNode()
 }
 
-// Identifier is the AST node that represents an identifier
-type Identifier struct {
-	Token lexer.Token
-	Value string
-}
-
-func (i *Identifier) expressionNode() {}
-
-func (i *Identifier) TokenLiteral() string {
-	return i.Token.Literal
-}
-
-func (i *Identifier) String() string {
-	return i.Value
-}
-
 // Program is the root node of every AST that the parser produces
 type Program struct {
+	Node
 	Statements []Statement
 }
 
