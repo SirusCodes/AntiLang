@@ -4,9 +4,18 @@ import (
 	"testing"
 
 	"github.com/SirusCodes/anti-lang/src/ast"
+	"github.com/SirusCodes/anti-lang/src/evaluator"
 	"github.com/SirusCodes/anti-lang/src/lexer"
+	"github.com/SirusCodes/anti-lang/src/object"
 	"github.com/SirusCodes/anti-lang/src/parser"
 )
+
+func EvalTest(input string) object.Object {
+	l := lexer.New(input)
+	p := parser.New(l)
+	program := p.ParseProgram()
+	return evaluator.Eval(program)
+}
 
 func ParseInput(t *testing.T, input string) *ast.Program {
 	lexer := lexer.New(input)
