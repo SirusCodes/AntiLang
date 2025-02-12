@@ -3,6 +3,7 @@ package evaluator_test
 import (
 	"testing"
 
+	"github.com/SirusCodes/anti-lang/src/evaluator"
 	"github.com/SirusCodes/anti-lang/src/object"
 	"github.com/SirusCodes/anti-lang/src/utils"
 )
@@ -110,5 +111,61 @@ func TestBangOperator(t *testing.T) {
 	for _, tt := range tests {
 		evaluated := utils.EvalTest(tt.input)
 		testBooleanObject(t, evaluated, tt.expected)
+	}
+}
+
+func TestIfElseExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"{true} if [ 10 ]", 10},
+		{"{false} if [ 10 ]", nil},
+		{"{1} if [ 10 ]", 10},
+		{"{1 < 2} if [ 10 ]", 10},
+		{"{1 > 2} if [ 10 ]", nil},
+		{"{1 > 2} if [ 10 ] else [ 20 ]", 20},
+		{"{1 < 2} if [ 10 ] else [ 20 ]", 10},
+	}
+	for _, tt := range tests {
+		evaluated := utils.EvalTest(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else {
+			testNullObject(t, evaluated)
+		}
+	}
+}
+
+func testNullObject(t *testing.T, obj object.Object) bool {
+	if obj != evaluator.NULL {
+		t.Errorf("object is not NULL. got=%T (%+v)", obj, obj)
+		return false
+	}
+	return true
+}
+
+func TestReturnStatements(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{",10 return", 10},
+		{",2 * 5 return", 10},
+		{"9, 2 * 5 return", 10},
+		{"{10 > 1} if [,10 return ]", 10},
+		{"{10 > 1} if [,10 return ] else [,20 return ]", 10},
+		{`{10 > 1} if [
+			{10 > 1} if [
+				,10 return
+			] 
+			,20 return
+		]`,
+			10},
+	}
+	for _, tt := range tests {
+		evaluated := utils.EvalTest(tt.input)
+		testIntegerObject(t, evaluated, tt.expected)
 	}
 }
