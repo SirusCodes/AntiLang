@@ -359,3 +359,15 @@ func TestArrayIndexExpressions(t *testing.T) {
 		}
 	}
 }
+
+func TestArrayIndexOutOfBounds(t *testing.T) {
+	input := "(3)(1; 2; 3)"
+	evaluated := utils.EvalTest(input)
+	errObj, ok := evaluated.(*object.Error)
+	if !ok {
+		t.Fatalf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+	}
+	if errObj.Message != "index out of bounds" {
+		t.Errorf("wrong error message. expected=%q, got=%q", "index out of bounds", errObj.Message)
+	}
+}
