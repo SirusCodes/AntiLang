@@ -7,6 +7,7 @@ import (
 
 	"github.com/SirusCodes/anti-lang/src/evaluator"
 	"github.com/SirusCodes/anti-lang/src/lexer"
+	"github.com/SirusCodes/anti-lang/src/object"
 	"github.com/SirusCodes/anti-lang/src/parser"
 )
 
@@ -14,6 +15,8 @@ const prompt = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
+
 	for {
 		fmt.Print(prompt)
 		scanned := scanner.Scan()
@@ -31,7 +34,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluator := evaluator.Eval(program)
+		evaluator := evaluator.Eval(program, env)
 
 		if evaluator != nil {
 			io.WriteString(out, evaluator.Inspect())

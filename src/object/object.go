@@ -1,6 +1,12 @@
 package object
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+	"strings"
+
+	"github.com/SirusCodes/anti-lang/src/ast"
+)
 
 const (
 	INTEGER_OBJ      = "INTEGER"

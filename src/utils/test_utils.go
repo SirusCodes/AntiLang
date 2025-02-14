@@ -14,7 +14,8 @@ func EvalTest(input string) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
 	program := p.ParseProgram()
-	return evaluator.Eval(program)
+	env := object.NewEnvironment()
+	return evaluator.Eval(program, env)
 }
 
 func ParseInput(t *testing.T, input string) *ast.Program {
