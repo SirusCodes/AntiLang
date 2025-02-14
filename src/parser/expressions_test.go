@@ -222,6 +222,10 @@ func TestFunctionExpressionParsing(t *testing.T) {
 		t.Fatalf("function literal parameters wrong. want 2, got=%d\n", len(function.Parameters))
 	}
 
+	if function.TokenLiteral() != "add" {
+		t.Fatalf("function.TokenLiteral is not 'add'. got=%s", function.TokenLiteral())
+	}
+
 	testLiteralExpression(t, function.Parameters[0], "x")
 	testLiteralExpression(t, function.Parameters[1], "y")
 

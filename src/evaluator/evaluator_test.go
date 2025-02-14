@@ -217,3 +217,45 @@ func TestLetStatements(t *testing.T) {
 		testIntegerObject(t, evaluated, tt.expected)
 	}
 }
+
+func TestFunctionObject(t *testing.T) {
+	input := "{x} abc func [x + 2]"
+	parsed := utils.ParseInput(t, input)
+	env := object.NewEnvironment()
+	evaluated := evaluator.Eval(parsed, env)
+
+	function, ok := env.Get("abc")
+	if !ok {
+		t.Fatalf("Function 'abc' not in environment")
+	}
+	fn, ok := function.(*object.Function)
+	if !ok {
+		t.Fatalf("object is not Function. got=%T (%+v)", evaluated, evaluated)
+	}
+	if len(fn.Parameters) != 1 {
+		t.Fatalf("function has wrong parameters. Parameters=%+v", fn.Parameters)
+	}
+	if fn.Parameters[0].String() != "x" {
+		t.Fatalf("parameter is not 'x'. got=%q", fn.Parameters[0])
+	}
+	expectedBody := "[(x + 2)]"
+	if fn.Body.String() != expectedBody {
+		t.Fatalf("body is not %q. got=%q", expectedBody, fn.Body.String())
+	}
+}
+
+func TestFunctionApplication(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{"{x} abc func [x + 2]\n{2}abc", 4},
+		{"{x} abc func [x + 2]\n{5}abc", 7},
+		{"{x} abc func [x + 2]\n{5 * 5}abc", 27},
+		{"{a; b} add func [a + b]\n{2; 3}add", 5},
+	}
+	for _, tt := range tests {
+		evaluated := utils.EvalTest(tt.input)
+		testIntegerObject(t, evaluated, tt.expected)
+	}
+}
