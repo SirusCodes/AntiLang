@@ -33,6 +33,8 @@ func TestNextToken(t *testing.T) {
 
 	$foobar$
 	$foo bar$
+
+	(a; b; c)
 `
 
 	tests := []struct {
@@ -139,6 +141,14 @@ func TestNextToken(t *testing.T) {
 
 		{STRING, "foobar"},
 		{STRING, "foo bar"},
+
+		{LPAREN, "("},
+		{IDENT, "a"},
+		{SEMICOLON, ";"},
+		{IDENT, "b"},
+		{SEMICOLON, ";"},
+		{IDENT, "c"},
+		{RPAREN, ")"},
 	}
 
 	l := New(input)

@@ -301,6 +301,85 @@ func TestStringLiteralExpression(t *testing.T) {
 	}
 }
 
+func TestArrayLiteralExpression(t *testing.T) {
+	input := "(1; 2 * 2; 3 + 3)"
+
+	program := utils.ParseInput(t, input)
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	array, ok := stmt.Expression.(*ast.ArrayLiteral)
+
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.ArrayLiteral. got=%T", stmt.Expression)
+	}
+
+	if len(array.Elements) != 3 {
+		t.Fatalf("len(array.Elements) not 3. got=%d", len(array.Elements))
+	}
+
+	testIntegerLiteral(t, array.Elements[0], 1)
+	testInfixExpression(t, array.Elements[1], 2, "*", 2)
+	testInfixExpression(t, array.Elements[2], 3, "+", 3)
+}
+
+func TestIndexExpression(t *testing.T) {
+	input := "(1 + 1)myArray"
+
+	program := utils.ParseInput(t, input)
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	indexExp, ok := stmt.Expression.(*ast.IndexExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.IndexExpression. got=%T", stmt.Expression)
+	}
+
+	if !testIdentifier(t, indexExp.Array, "myArray") {
+		return
+	}
+
+	if !testInfixExpression(t, indexExp.Index, 1, "+", 1) {
+		return
+	}
+}
+
+func TestIndexOnArrayLiteral(t *testing.T) {
+	input := "(0)(1; 1)"
+
+	program := utils.ParseInput(t, input)
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	indexExp, ok := stmt.Expression.(*ast.IndexExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.IndexExpression. got=%T", stmt.Expression)
+	}
+
+	array, ok := indexExp.Array.(*ast.ArrayLiteral)
+	if !ok {
+		t.Fatalf("indexExp.Array is not ast.ArrayLiteral. got=%T", indexExp.Array)
+	}
+
+	if len(array.Elements) != 2 {
+		t.Fatalf("len(array.Elements) not 2. got=%d", len(array.Elements))
+	}
+
+	if !testIntegerLiteral(t, indexExp.Index, 0) {
+		return
+	}
+}
+
 // HELPER FUNCTIONS
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)

@@ -204,3 +204,40 @@ func (sl *StringLiteral) TokenLiteral() string {
 func (sl *StringLiteral) String() string {
 	return sl.Token.Literal
 }
+
+// ArrayLiteral represents an array literal
+type ArrayLiteral struct {
+	Expression
+	Token    lexer.Token
+	Elements []Expression
+}
+
+func (al *ArrayLiteral) TokenLiteral() string {
+	return al.Token.Literal
+}
+
+func (al *ArrayLiteral) String() string {
+	var elements []string
+
+	for _, el := range al.Elements {
+		elements = append(elements, el.String())
+	}
+
+	return "(" + strings.Join(elements, "; ") + ")"
+}
+
+// IndexExpression represents an index expression
+type IndexExpression struct {
+	Expression
+	Token lexer.Token
+	Array Expression
+	Index Expression
+}
+
+func (ie *IndexExpression) TokenLiteral() string {
+	return ie.Token.Literal
+}
+
+func (ie *IndexExpression) String() string {
+	return "{" + ie.Array.String() + "(" + ie.Index.String() + ")}"
+}

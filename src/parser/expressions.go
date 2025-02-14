@@ -265,3 +265,48 @@ func (parser *Parser) parseWhileExpression() ast.Expression {
 func (parser *Parser) parseStringLiteral() ast.Expression {
 	return &ast.StringLiteral{Token: parser.curToken, Value: parser.curToken.Literal}
 }
+
+func (parser *Parser) parseLParenExpression() ast.Expression {
+	isIndexExp := false
+
+	parser.peekTokenTemp(func() {
+		for !parser.curTokenIs(lexer.RPAREN) {
+			parser.nextToken()
+		}
+
+		isIndexExp = parser.peekTokenIs(lexer.IDENT) || parser.peekTokenIs(lexer.LPAREN)
+	})
+
+	if isIndexExp {
+		return parser.parseIndexExpression(parser.parseIdentifier())
+	}
+
+	return parser.parseArrayLiteral()
+}
+
+func (parser *Parser) parseArrayLiteral() ast.Expression {
+	al := &ast.ArrayLiteral{Token: parser.curToken}
+	al.Elements = parser.parseExpressionList(lexer.RPAREN)
+	return al
+}
+
+func (parser *Parser) parseIndexExpression(array ast.Expression) ast.Expression {
+	ie := &ast.IndexExpression{Token: parser.curToken}
+
+	parser.nextToken()
+	ie.Index = parser.parseExpression(LOWEST, lexer.RPAREN)
+
+	if !parser.peekTokenAndNext(lexer.RPAREN) {
+		return nil
+	}
+
+	parser.nextToken()
+
+	if parser.curTokenIs(lexer.IDENT) {
+		ie.Array = parser.parseIdentifier()
+	} else if parser.curTokenIs(lexer.LPAREN) {
+		ie.Array = parser.parseArrayLiteral()
+	}
+
+	return ie
+}
