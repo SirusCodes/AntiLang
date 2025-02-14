@@ -278,7 +278,7 @@ func (parser *Parser) parseLParenExpression() ast.Expression {
 	})
 
 	if isIndexExp {
-		return parser.parseIndexExpression(parser.parseIdentifier())
+		return parser.parseIndexExpression()
 	}
 
 	return parser.parseArrayLiteral()
@@ -290,7 +290,7 @@ func (parser *Parser) parseArrayLiteral() ast.Expression {
 	return al
 }
 
-func (parser *Parser) parseIndexExpression(array ast.Expression) ast.Expression {
+func (parser *Parser) parseIndexExpression() ast.Expression {
 	ie := &ast.IndexExpression{Token: parser.curToken}
 
 	parser.nextToken()
