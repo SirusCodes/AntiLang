@@ -30,6 +30,9 @@ func TestNextToken(t *testing.T) {
 	)
 
 	&& ||
+
+	$foobar$
+	$foo bar$
 `
 
 	tests := []struct {
@@ -133,6 +136,9 @@ func TestNextToken(t *testing.T) {
 		{RPAREN, ")"},
 		{LOG_AND, "&&"},
 		{LOG_OR, "||"},
+
+		{STRING, "foobar"},
+		{STRING, "foo bar"},
 	}
 
 	l := New(input)

@@ -279,6 +279,28 @@ func TestWhileExpressionParsing(t *testing.T) {
 	testIdentifier(t, bodyStmt.ReturnValue, "b")
 }
 
+func TestStringLiteralExpression(t *testing.T) {
+	input := `$hello world$`
+
+	program := utils.ParseInput(t, input)
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	literal, ok := stmt.Expression.(*ast.StringLiteral)
+
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.StringLiteral. got=%T", stmt.Expression)
+	}
+
+	if literal.Value != "hello world" {
+		t.Errorf("literal.Value not %q. got=%q", "hello world", literal.Value)
+	}
+}
+
 // HELPER FUNCTIONS
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)
@@ -323,7 +345,7 @@ func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{
 	case int64:
 		return testIntegerLiteral(t, exp, v)
 	case bool:
-		return testBoolean(t, exp, v)
+		return testBooleanLiteral(t, exp, v)
 	case string:
 		return testIdentifier(t, exp, v)
 	}
@@ -331,8 +353,8 @@ func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{
 	return false
 }
 
-func testBoolean(t *testing.T, exp ast.Expression, value bool) bool {
-	bool, ok := exp.(*ast.Boolean)
+func testBooleanLiteral(t *testing.T, exp ast.Expression, value bool) bool {
+	bool, ok := exp.(*ast.BooleanLiteral)
 	if !ok {
 		t.Errorf("exp not *ast.Boolean. got=%T", exp)
 		return false

@@ -73,7 +73,7 @@ func (parser *Parser) parseIntegerLiteral() ast.Expression {
 }
 
 func (parser *Parser) parseBoolean() ast.Expression {
-	return &ast.Boolean{Token: parser.curToken, Value: parser.curTokenIs(lexer.TRUE)}
+	return &ast.BooleanLiteral{Token: parser.curToken, Value: parser.curTokenIs(lexer.TRUE)}
 }
 
 func (parser *Parser) parseLBraceExpression() ast.Expression {
@@ -260,4 +260,8 @@ func (parser *Parser) parseWhileExpression() ast.Expression {
 	we.Body = parser.parseBlockStatement()
 
 	return we
+}
+
+func (parser *Parser) parseStringLiteral() ast.Expression {
+	return &ast.StringLiteral{Token: parser.curToken, Value: parser.curToken.Literal}
 }

@@ -77,6 +77,8 @@ func (l *Lexer) NextToken() Token {
 		} else {
 			tok = newToken(ILLEGAL, l.ch)
 		}
+	case '$':
+		tok = l.readString()
 	case 0:
 		tok.Literal = ""
 		tok.Type = EOF
@@ -182,4 +184,15 @@ func isDigit(ch byte) bool {
 
 func newToken(tokenType TokenType, ch byte) Token {
 	return Token{Type: tokenType, Literal: string(ch)}
+}
+
+func (l *Lexer) readString() Token {
+	position := l.position + 1
+	for {
+		l.readChar()
+		if l.ch == '$' || l.ch == 0 {
+			break
+		}
+	}
+	return Token{Type: STRING, Literal: l.input[position:l.position]}
 }

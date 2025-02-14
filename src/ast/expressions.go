@@ -175,17 +175,32 @@ func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
 
-// Boolean represents a boolean literal
-type Boolean struct {
+// BooleanLiteral represents a boolean literal
+type BooleanLiteral struct {
 	Expression
 	Token lexer.Token
 	Value bool
 }
 
-func (b *Boolean) TokenLiteral() string {
+func (b *BooleanLiteral) TokenLiteral() string {
 	return b.Token.Literal
 }
 
-func (b *Boolean) String() string {
+func (b *BooleanLiteral) String() string {
 	return b.Token.Literal
+}
+
+// StringLiteral represents a string literal
+type StringLiteral struct {
+	Expression
+	Token lexer.Token
+	Value string
+}
+
+func (sl *StringLiteral) TokenLiteral() string {
+	return sl.Token.Literal
+}
+
+func (sl *StringLiteral) String() string {
+	return sl.Token.Literal
 }

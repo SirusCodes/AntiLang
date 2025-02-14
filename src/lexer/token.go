@@ -55,6 +55,9 @@ const (
 	RETURN   = "RETURN"
 	FOR      = "FOR"
 	WHILE    = "WHILE"
+
+	// Data types
+	STRING = "STRING"
 )
 
 type Token struct {
