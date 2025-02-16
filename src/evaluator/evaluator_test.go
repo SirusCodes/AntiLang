@@ -346,7 +346,6 @@ func TestArrayIndexExpressions(t *testing.T) {
 		{",(1; 2; 3) = myArray let\n(0)myArray", 1},
 		{",(1; 2; 3) = myArray let\n(1)myArray", 2},
 		{",(1; 2; 3) = myArray let\n(2)myArray", 3},
-		{",(1; 2; 3) = myArray let\n(3)myArray", nil},
 	}
 	for _, tt := range tests {
 		evaluated := utils.EvalTest(tt.input)
@@ -369,5 +368,55 @@ func TestArrayIndexOutOfBounds(t *testing.T) {
 	}
 	if errObj.Message != "index out of bounds" {
 		t.Errorf("wrong error message. expected=%q, got=%q", "index out of bounds", errObj.Message)
+	}
+}
+
+func TestHashLiterals(t *testing.T) {
+	input := "[1= 2; 2= 3]"
+	evaluated := utils.EvalTest(input)
+	result, ok := evaluated.(*object.Hash)
+	if !ok {
+		t.Fatalf("object is not Hash. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	expected := map[object.HashKey]int64{
+		(&object.Integer{Value: 1}).HashKey(): 2,
+		(&object.Integer{Value: 2}).HashKey(): 3,
+	}
+
+	if len(result.Pairs) != 2 {
+		t.Fatalf("hash has wrong number of pairs. got=%d", len(result.Pairs))
+	}
+
+	for expectedKey, expectedValue := range expected {
+		pair, ok := result.Pairs[expectedKey]
+		if !ok {
+			t.Errorf("no pair for given key in Pairs")
+		}
+		testIntegerObject(t, pair.Value, expectedValue)
+	}
+}
+
+func TestHashIndexExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"(1)[1= 2; 2= 3]", 2},
+		{"(2)[1= 2; 2= 3]", 3},
+		{"(1 + 1)[1= 2; 2= 3]", 3},
+		{",[1= 2; 2= 3] = myHash let\n(1)myHash", 2},
+		{",[1= 2; 2= 3] = myHash let\n(2)myHash", 3},
+		{",[1= 2; 2= 3] = myHash let\n(3)myHash", nil},
+	}
+	for _, tt := range tests {
+		evaluated := utils.EvalTest(tt.input)
+
+		switch expected := tt.expected.(type) {
+		case int:
+			testIntegerObject(t, evaluated, int64(expected))
+		default:
+			testNullObject(t, evaluated)
+		}
 	}
 }

@@ -274,7 +274,7 @@ func (parser *Parser) parseLParenExpression() ast.Expression {
 			parser.nextToken()
 		}
 
-		isIndexExp = parser.peekTokenIs(lexer.IDENT) || parser.peekTokenIs(lexer.LPAREN)
+		isIndexExp = parser.peekTokenIs(lexer.IDENT) || parser.peekTokenIs(lexer.LPAREN) || parser.peekTokenIs(lexer.LSQBRAC)
 	})
 
 	if isIndexExp {
@@ -306,7 +306,38 @@ func (parser *Parser) parseIndexExpression() ast.Expression {
 		ie.Array = parser.parseIdentifier()
 	} else if parser.curTokenIs(lexer.LPAREN) {
 		ie.Array = parser.parseArrayLiteral()
+	} else if parser.curTokenIs(lexer.LSQBRAC) {
+		ie.Array = parser.parseHashLiteral()
 	}
 
 	return ie
+}
+
+func (parser *Parser) parseHashLiteral() ast.Expression {
+	hl := &ast.HashLiteral{Token: parser.curToken}
+	hl.Pairs = make(map[ast.Expression]ast.Expression)
+
+	for !parser.peekTokenIs(lexer.RSQBRAC) {
+		parser.nextToken()
+		key := parser.parseExpression(LOWEST, lexer.ASSIGN)
+
+		if !parser.peekTokenAndNext(lexer.ASSIGN) {
+			return nil
+		}
+
+		parser.nextToken()
+		value := parser.parseExpression(LOWEST, lexer.SEMICOLON)
+
+		hl.Pairs[key] = value
+
+		if !parser.peekTokenIs(lexer.RSQBRAC) && !parser.peekTokenAndNext(lexer.SEMICOLON) {
+			return nil
+		}
+	}
+
+	if !parser.peekTokenAndNext(lexer.RSQBRAC) {
+		return nil
+	}
+
+	return hl
 }

@@ -241,3 +241,24 @@ func (ie *IndexExpression) TokenLiteral() string {
 func (ie *IndexExpression) String() string {
 	return "{" + ie.Array.String() + "(" + ie.Index.String() + ")}"
 }
+
+// HashLiteral represents a hash literal
+type HashLiteral struct {
+	Expression
+	Token lexer.Token
+	Pairs map[Expression]Expression
+}
+
+func (hl *HashLiteral) TokenLiteral() string {
+	return hl.Token.Literal
+}
+
+func (hl *HashLiteral) String() string {
+	var pairs []string
+
+	for key, value := range hl.Pairs {
+		pairs = append(pairs, key.String()+"="+value.String())
+	}
+
+	return "[" + strings.Join(pairs, "; ") + "]"
+}

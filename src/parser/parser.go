@@ -71,6 +71,7 @@ func New(l *lexer.Lexer) *Parser {
 	parser.registerPrefix(lexer.LBRACE, parser.parseLBraceExpression)
 	parser.registerPrefix(lexer.STRING, parser.parseStringLiteral)
 	parser.registerPrefix(lexer.LPAREN, parser.parseLParenExpression)
+	parser.registerPrefix(lexer.LSQBRAC, parser.parseHashLiteral)
 
 	// All infix parse functions
 	parser.infixParseFns = make(infixParseFns)
@@ -172,8 +173,8 @@ func (parser *Parser) parseStatement() ast.Statement {
 	switch parser.curToken.Type {
 	case lexer.COMMA:
 		return parser.parseStatementByComma()
-	case lexer.LSQBRAC:
-		return parser.parseBlockStatement()
+	// case lexer.LSQBRAC:
+	// 	return parser.parseBlockStatement()
 	default:
 		return parser.parseExpressionStatement()
 	}
