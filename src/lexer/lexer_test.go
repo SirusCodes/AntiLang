@@ -25,10 +25,6 @@ func TestNextToken(t *testing.T) {
 		)
 	)
 
-	{i += 1, i < num, 0 = i let} for (
-		
-	)
-
 	&& ||
 
 	$foobar$
@@ -119,23 +115,6 @@ func TestNextToken(t *testing.T) {
 		{RPAREN, ")"},
 		{RPAREN, ")"},
 
-		{LBRACE, "{"},
-		{IDENT, "i"},
-		{PLUS_EQ, "+="},
-		{INT, "1"},
-		{COMMA, ","},
-		{IDENT, "i"},
-		{LT, "<"},
-		{IDENT, "num"},
-		{COMMA, ","},
-		{INT, "0"},
-		{ASSIGN, "="},
-		{IDENT, "i"},
-		{LET, "let"},
-		{RBRACE, "}"},
-		{FOR, "for"},
-		{LPAREN, "("},
-		{RPAREN, ")"},
 		{LOG_AND, "&&"},
 		{LOG_OR, "||"},
 

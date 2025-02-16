@@ -15,14 +15,10 @@ func (parser *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 
 func (parser *Parser) parseStatementByComma() ast.Statement {
 	parser.nextToken()
-	if parser.curTokenIs(lexer.LBRACE) {
-		// TODO: Implement Function call
-		return nil
-	}
 
 	var token lexer.Token
 	parser.peekTokenTemp(func() {
-		for parser.curToken.Type != lexer.LET && parser.curToken.Type != lexer.RETURN {
+		for parser.curToken.Type != lexer.LET && parser.curToken.Type != lexer.RETURN && parser.curToken.Type != lexer.EOF {
 			parser.nextToken()
 		}
 
@@ -35,6 +31,11 @@ func (parser *Parser) parseStatementByComma() ast.Statement {
 	case lexer.RETURN:
 		return parser.parseReturnStatement()
 	default:
+		if parser.curToken.Type == lexer.LBRACE {
+			es := &ast.ExpressionStatement{Token: parser.curToken}
+			es.Expression = parser.parseLBraceExpression()
+			return es
+		}
 		parser.addGenericError("parser: expected token to be LET or RETURN, got " + token.Literal + " instead")
 	}
 

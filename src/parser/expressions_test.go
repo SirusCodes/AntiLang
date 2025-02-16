@@ -483,6 +483,68 @@ func TestParsingHashLiteralsWithExpressions(t *testing.T) {
 	}
 }
 
+func TestParsingFunctionCallToLetStatement(t *testing.T) {
+	input := ",{2; 4}add = res let"
+
+	program := utils.ParseInput(t, input)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.LetStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.LetStatement. got=%T", program.Statements[0])
+	}
+
+	if stmt.Name.Value != "res" {
+		t.Errorf("stmt.Name.Value not 'res'. got=%s", stmt.Name.Value)
+	}
+
+	callExpression, ok := stmt.Value.(*ast.CallExpression)
+	if !ok {
+		t.Fatalf("stmt.Value is not ast.CallExpression. got=%T", stmt.Value)
+	}
+
+	if !testIdentifier(t, callExpression.Function, "add") {
+		return
+	}
+
+	if len(callExpression.Arguments) != 2 {
+		t.Fatalf("wrong length of arguments. got=%d", len(callExpression.Arguments))
+	}
+
+	testIntegerLiteral(t, callExpression.Arguments[0], 2)
+	testIntegerLiteral(t, callExpression.Arguments[1], 4)
+}
+
+func TestParsingCommaCallExpression(t *testing.T) {
+	input := ",{1; 2}add"
+
+	program := utils.ParseInput(t, input)
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	callExpression, ok := stmt.Expression.(*ast.CallExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.CallExpression. got=%T", stmt.Expression)
+	}
+
+	if !testIdentifier(t, callExpression.Function, "add") {
+		return
+	}
+
+	if len(callExpression.Arguments) != 2 {
+		t.Fatalf("wrong length of arguments. got=%d", len(callExpression.Arguments))
+	}
+
+	testIntegerLiteral(t, callExpression.Arguments[0], 1)
+	testIntegerLiteral(t, callExpression.Arguments[1], 2)
+}
+
 // HELPER FUNCTIONS
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)

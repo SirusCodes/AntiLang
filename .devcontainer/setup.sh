@@ -6,4 +6,7 @@ curl -OL https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
 tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz
 rm go1.23.5.linux-amd64.tar.gz
 
-echo "PATH=\"$PATH:/usr/local/go/bin\"" >> ~/.profile
+$GOPATH="/usr/local/go/bin"
+echo "PATH=\"$PATH:$GOPATH\"" >> ~/.profile
+echo "PATH=\"$PATH:$GOPATH/bin\"" >> ~/.profile
+

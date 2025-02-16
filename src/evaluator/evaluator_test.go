@@ -420,3 +420,14 @@ func TestHashIndexExpressions(t *testing.T) {
 		}
 	}
 }
+
+func TestFuncCallAssignment(t *testing.T) {
+	input := `{a; b} add func [
+    ,a + b return
+]
+
+,{2; 4}add = res let
+res`
+	evaluated := utils.EvalTest(input)
+	testIntegerObject(t, evaluated, 6)
+}
