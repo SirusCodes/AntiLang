@@ -95,6 +95,12 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalIndexExpression(array, index)
 	case *ast.HashLiteral:
 		return evalHashLiteral(node, env)
+	case *ast.AssignExpression:
+		val := Eval(node.Value, env)
+		if isError(val) {
+			return val
+		}
+		return evalAssignExpression(node.Name.TokenLiteral(), node.Operator, val, env)
 	}
 	return nil
 }
@@ -393,4 +399,43 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 	}
 
 	return pair.Value
+}
+
+func evalAssignExpression(name, operator string, value object.Object, env *object.Environment) object.Object {
+	if _, ok := env.Get(name); !ok {
+		return newError("identifier not found: %s", name)
+	}
+
+	switch operator {
+	case "=":
+		env.Set(name, value)
+	case "+=":
+		current, _ := env.Get(name)
+		if current.Type() != value.Type() {
+			return newError("type mismatch: %s += %s", current.Type(), value.Type())
+		}
+		env.Set(name, evalInfixExpression("+", current, value))
+	case "-=":
+		current, _ := env.Get(name)
+		if current.Type() != value.Type() {
+			return newError("type mismatch: %s -= %s", current.Type(), value.Type())
+		}
+		env.Set(name, evalInfixExpression("-", current, value))
+	case "*=":
+		current, _ := env.Get(name)
+		if current.Type() != value.Type() {
+			return newError("type mismatch: %s *= %s", current.Type(), value.Type())
+		}
+		env.Set(name, evalInfixExpression("*", current, value))
+	case "/=":
+		current, _ := env.Get(name)
+		if current.Type() != value.Type() {
+			return newError("type mismatch: %s /= %s", current.Type(), value.Type())
+		}
+		env.Set(name, evalInfixExpression("/", current, value))
+	default:
+		return newError("unknown operator: %s", operator)
+	}
+
+	return NULL
 }

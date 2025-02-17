@@ -160,6 +160,23 @@ func (we *WhileExpression) String() string {
 	return out.String()
 }
 
+// AssignExpression represents an assign expression
+type AssignExpression struct {
+	Expression
+	Token    lexer.Token
+	Name     *Identifier
+	Operator string
+	Value    Expression
+}
+
+func (ae *AssignExpression) TokenLiteral() string {
+	return ae.Token.Literal
+}
+
+func (ae *AssignExpression) String() string {
+	return ae.Value.String() + " " + ae.Operator + " " + ae.Name.String()
+}
+
 // IntegerLiteral represents an integer literal
 type IntegerLiteral struct {
 	Expression

@@ -545,6 +545,42 @@ func TestParsingCommaCallExpression(t *testing.T) {
 	testIntegerLiteral(t, callExpression.Arguments[1], 2)
 }
 
+func TestAssignExpression(t *testing.T) {
+	tests := []struct {
+		input    string
+		value    interface{}
+		operator string
+		name     string
+	}{
+		{",5 = a", 5, "=", "a"},
+		{",5 += a", 5, "+=", "a"},
+		{",5 -= a", 5, "-=", "a"},
+		{",5 *= a", 5, "*=", "a"},
+		{",5 /= a", 5, "/=", "a"},
+	}
+
+	for _, tt := range tests {
+		program := utils.ParseInput(t, tt.input)
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement).Expression.(*ast.AssignExpression)
+		if !ok {
+			t.Fatalf("program.Statements[0] is not ast.LetStatement. got=%T", program.Statements[0])
+		}
+
+		if !testLiteralExpression(t, stmt.Value, tt.value) {
+			return
+		}
+
+		if stmt.Operator != tt.operator {
+			t.Errorf("stmt.Operator is not '%s'. got=%s", tt.operator, stmt.Operator)
+		}
+
+		if stmt.Name.Value != tt.name {
+			t.Errorf("stmt.Name.Value is not '%s'. got=%s", tt.name, stmt.Name.Value)
+		}
+	}
+}
+
 // HELPER FUNCTIONS
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)

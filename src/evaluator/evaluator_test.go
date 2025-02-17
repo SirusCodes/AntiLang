@@ -431,3 +431,19 @@ res`
 	evaluated := utils.EvalTest(input)
 	testIntegerObject(t, evaluated, 6)
 }
+
+func TestReassignmentOperators(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{",5 = a let\n,5 += a\na", 10},
+		{",5 = a let\n,5 -= a\na", 0},
+		{",5 = a let\n,5 *= a\na", 25},
+		{",5 = a let\n,5 /= a\na", 1},
+	}
+	for _, tt := range tests {
+		evaluated := utils.EvalTest(tt.input)
+		testIntegerObject(t, evaluated, tt.expected)
+	}
+}

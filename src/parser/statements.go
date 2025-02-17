@@ -8,7 +8,7 @@ import (
 func (parser *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	stmt := &ast.ExpressionStatement{Token: parser.curToken}
 
-	stmt.Expression = parser.parseExpression(LOWEST, lexer.SEMICOLON)
+	stmt.Expression = parser.parseExpression(LOWEST, lexer.COMMA)
 
 	return stmt
 }
@@ -17,29 +17,27 @@ func (parser *Parser) parseStatementByComma() ast.Statement {
 	parser.nextToken()
 
 	var token lexer.Token
+	isAssign := false
 	parser.peekTokenTemp(func() {
 		for parser.curToken.Type != lexer.LET && parser.curToken.Type != lexer.RETURN && parser.curToken.Type != lexer.EOF {
+			isAssign = parser.isCurTokenAny(lexer.ASSIGN, lexer.ASTER_EQ, lexer.PLUS_EQ, lexer.MINUS_EQ, lexer.SLASH_EQ) || isAssign
 			parser.nextToken()
 		}
 
 		token = parser.curToken
 	})
 
-	switch token.Type {
-	case lexer.LET:
-		return parser.parseLetStatement()
-	case lexer.RETURN:
-		return parser.parseReturnStatement()
-	default:
-		if parser.curToken.Type == lexer.LBRACE {
-			es := &ast.ExpressionStatement{Token: parser.curToken}
-			es.Expression = parser.parseLBraceExpression()
-			return es
+	if isAssign {
+		if token.Type == lexer.LET {
+			return parser.parseLetStatement()
 		}
+		return parser.parseExpressionStatement()
+	} else if token.Type == lexer.RETURN {
+		return parser.parseReturnStatement()
+	} else {
 		parser.addGenericError("parser: expected token to be LET or RETURN, got " + token.Literal + " instead")
+		return nil
 	}
-
-	return nil
 }
 
 func (parser *Parser) parseLetStatement() *ast.LetStatement {

@@ -15,19 +15,31 @@ var (
 const (
 	_ int = iota
 	LOWEST
+	COND        // && ||
+	ASSIGN      // = += -= *= /=
 	EQUALS      // ==
 	LESSGREATER // > or <
 	SUM         // + or -
 	PRODUCT     // * or /
+	MOD         // %
 	PREFIX      // -X or !X
 	CALL        // myFunction(X)
 )
 
 var precedences = map[lexer.TokenType]int{
+	lexer.LOG_AND:  COND,
+	lexer.LOG_OR:   COND,
+	lexer.ASSIGN:   ASSIGN,
+	lexer.ASTER_EQ: ASSIGN,
+	lexer.MINUS_EQ: ASSIGN,
+	lexer.PLUS_EQ:  ASSIGN,
+	lexer.SLASH_EQ: ASSIGN,
 	lexer.EQ:       EQUALS,
 	lexer.NOT_EQ:   EQUALS,
 	lexer.LT:       LESSGREATER,
 	lexer.GT:       LESSGREATER,
+	lexer.GT_EQ:    LESSGREATER,
+	lexer.LT_EQ:    LESSGREATER,
 	lexer.PLUS:     SUM,
 	lexer.MINUS:    SUM,
 	lexer.SLASH:    PRODUCT,
@@ -76,16 +88,23 @@ func New(l *lexer.Lexer) *Parser {
 	// All infix parse functions
 	parser.infixParseFns = make(infixParseFns)
 	parser.registerInfix(lexer.LOG_AND, parser.parseInfixExpression)
+	parser.registerInfix(lexer.ASTER_EQ, parser.parseAssignExpression)
 	parser.registerInfix(lexer.ASTERISK, parser.parseInfixExpression)
+	parser.registerInfix(lexer.ASSIGN, parser.parseAssignExpression)
 	parser.registerInfix(lexer.EQ, parser.parseInfixExpression)
 	parser.registerInfix(lexer.GT, parser.parseInfixExpression)
+	parser.registerInfix(lexer.GT_EQ, parser.parseAssignExpression)
 	parser.registerInfix(lexer.LT, parser.parseInfixExpression)
+	parser.registerInfix(lexer.LT_EQ, parser.parseAssignExpression)
 	parser.registerInfix(lexer.MINUS, parser.parseInfixExpression)
+	parser.registerInfix(lexer.MINUS_EQ, parser.parseAssignExpression)
 	parser.registerInfix(lexer.MOD, parser.parseInfixExpression)
 	parser.registerInfix(lexer.NOT_EQ, parser.parseInfixExpression)
 	parser.registerInfix(lexer.LOG_OR, parser.parseInfixExpression)
 	parser.registerInfix(lexer.PLUS, parser.parseInfixExpression)
+	parser.registerInfix(lexer.PLUS_EQ, parser.parseAssignExpression)
 	parser.registerInfix(lexer.SLASH, parser.parseInfixExpression)
+	parser.registerInfix(lexer.SLASH_EQ, parser.parseAssignExpression)
 
 	return parser
 }
@@ -198,4 +217,14 @@ func (parser *Parser) curPrecedence() int {
 	}
 
 	return LOWEST
+}
+
+func (parser *Parser) isCurTokenAny(t ...lexer.TokenType) bool {
+	for _, token := range t {
+		if parser.curTokenIs(token) {
+			return true
+		}
+	}
+
+	return false
 }

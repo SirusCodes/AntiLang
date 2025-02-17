@@ -8,7 +8,7 @@ import (
 	"github.com/SirusCodes/anti-lang/src/lexer"
 )
 
-func (parser *Parser) parseExpression(precedence int, endToken lexer.TokenType) ast.Expression {
+func (parser *Parser) parseExpression(precedence int, endTokens lexer.TokenType) ast.Expression {
 
 	prefix := parser.prefixParseFns[parser.curToken.Type]
 	if prefix == nil {
@@ -18,7 +18,7 @@ func (parser *Parser) parseExpression(precedence int, endToken lexer.TokenType) 
 	}
 	leftExp := prefix()
 
-	for !parser.peekTokenIs(endToken) && precedence < parser.peekPrecedence() {
+	for !parser.peekTokenIs(endTokens) && precedence < parser.peekPrecedence() {
 		infix := parser.infixParseFns[parser.peekToken.Type]
 		if infix == nil {
 			return leftExp
@@ -340,4 +340,18 @@ func (parser *Parser) parseHashLiteral() ast.Expression {
 	}
 
 	return hl
+}
+
+func (parser *Parser) parseAssignExpression(value ast.Expression) ast.Expression {
+	ae := &ast.AssignExpression{}
+
+	ae.Value = value
+
+	ae.Operator = parser.curToken.Literal
+
+	parser.nextToken()
+	ae.Name = parser.parseIdentifier().(*ast.Identifier)
+	ae.Token = parser.curToken
+
+	return ae
 }
