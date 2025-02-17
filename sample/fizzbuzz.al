@@ -1,6 +1,6 @@
 ,1 = i let
 
-{i <= 16} while [
+{i < 16} while [
     {i % 3 == 0 && i % 5 == 0} if [
         ,{$FizzBuzz$}print
     ] else [

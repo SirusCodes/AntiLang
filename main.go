@@ -57,8 +57,21 @@ func runFile(path string) int {
 	l := lexer.New(string(file))
 	p := parser.New(l)
 	ast := p.ParseProgram()
+
+	if len(p.Errors()) != 0 {
+		for _, msg := range p.Errors() {
+			fmt.Println(msg)
+		}
+		return 1
+	}
+
 	env := object.NewEnvironment()
-	evaluator.Eval(ast, env)
+	resp := evaluator.Eval(ast, env)
+
+	if resp != nil && resp.Type() == object.ERROR_OBJ {
+		fmt.Println(resp.Inspect())
+		return 1
+	}
 
 	return 0
 }
