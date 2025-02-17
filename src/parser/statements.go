@@ -78,9 +78,7 @@ func (parser *Parser) parseBlockStatement() *ast.BlockStatement {
 
 	for !parser.curTokenIs(lexer.RSQBRAC) && !parser.curTokenIs(lexer.EOF) {
 		stmt := parser.parseStatement()
-		if stmt != nil {
-			block.Statements = append(block.Statements, stmt)
-		}
+		block.Statements = append(block.Statements, stmt)
 		parser.nextToken()
 	}
 

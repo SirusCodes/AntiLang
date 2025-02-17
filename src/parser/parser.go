@@ -128,9 +128,7 @@ func (parser *Parser) ParseProgram() *ast.Program {
 
 	for !parser.curTokenIs(lexer.EOF) {
 		stmt := parser.parseStatement()
-		if stmt != nil {
-			program.Statements = append(program.Statements, stmt)
-		}
+		program.Statements = append(program.Statements, stmt)
 		parser.nextToken()
 	}
 
