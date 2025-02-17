@@ -447,3 +447,16 @@ func TestReassignmentOperators(t *testing.T) {
 		testIntegerObject(t, evaluated, tt.expected)
 	}
 }
+
+func TestWhileExpression(t *testing.T) {
+	input := `,0 = x let
+
+{x < 5} while [
+	,x += 1
+]
+
+x
+`
+	evaluated := utils.EvalTest(input)
+	testIntegerObject(t, evaluated, 5)
+}

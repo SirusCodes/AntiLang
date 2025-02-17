@@ -8,7 +8,7 @@ import (
 	"github.com/SirusCodes/anti-lang/src/lexer"
 )
 
-func (parser *Parser) parseExpression(precedence int, endTokens lexer.TokenType) ast.Expression {
+func (parser *Parser) parseExpression(precedence int, endToken lexer.TokenType) ast.Expression {
 
 	prefix := parser.prefixParseFns[parser.curToken.Type]
 	if prefix == nil {
@@ -18,7 +18,7 @@ func (parser *Parser) parseExpression(precedence int, endTokens lexer.TokenType)
 	}
 	leftExp := prefix()
 
-	for !parser.peekTokenIs(endTokens) && precedence < parser.peekPrecedence() {
+	for !parser.peekTokenIs(endToken) && precedence < parser.peekPrecedence() && !parser.peekTokenIs(lexer.EOF) {
 		infix := parser.infixParseFns[parser.peekToken.Type]
 		if infix == nil {
 			return leftExp
@@ -80,7 +80,7 @@ func (parser *Parser) parseLBraceExpression() ast.Expression {
 	var token lexer.Token
 	var isFuncDef bool
 	parser.peekTokenTemp(func() {
-		for !parser.curTokenIs(lexer.RBRACE) {
+		for !parser.curTokenIs(lexer.RBRACE) && !parser.curTokenIs(lexer.EOF) {
 			parser.nextToken()
 		}
 
@@ -139,7 +139,7 @@ func (parser *Parser) parseFunctionParameters() []*ast.Identifier {
 	ident := &ast.Identifier{Token: parser.curToken, Value: parser.curToken.Literal}
 	identifiers = append(identifiers, ident)
 
-	for parser.peekTokenIs(lexer.SEMICOLON) {
+	for parser.peekTokenIs(lexer.SEMICOLON) && !parser.peekTokenIs(lexer.EOF) {
 		parser.nextToken()
 		parser.nextToken()
 		ident := &ast.Identifier{Token: parser.curToken, Value: parser.curToken.Literal}
@@ -215,7 +215,7 @@ func (parser *Parser) parseExpressionList(end lexer.TokenType) []ast.Expression 
 	parser.nextToken()
 	list = append(list, parser.parseExpression(LOWEST, lexer.SEMICOLON))
 
-	for parser.peekTokenIs(lexer.SEMICOLON) {
+	for parser.peekTokenIs(lexer.SEMICOLON) && !parser.peekTokenIs(lexer.EOF) {
 		parser.nextToken()
 		parser.nextToken()
 		list = append(list, parser.parseExpression(LOWEST, lexer.SEMICOLON))
@@ -270,7 +270,7 @@ func (parser *Parser) parseLParenExpression() ast.Expression {
 	isIndexExp := false
 
 	parser.peekTokenTemp(func() {
-		for !parser.curTokenIs(lexer.RPAREN) {
+		for !parser.curTokenIs(lexer.RPAREN) && !parser.curTokenIs(lexer.EOF) {
 			parser.nextToken()
 		}
 
@@ -317,7 +317,7 @@ func (parser *Parser) parseHashLiteral() ast.Expression {
 	hl := &ast.HashLiteral{Token: parser.curToken}
 	hl.Pairs = make(map[ast.Expression]ast.Expression)
 
-	for !parser.peekTokenIs(lexer.RSQBRAC) {
+	for !parser.peekTokenIs(lexer.RSQBRAC) && !parser.peekTokenIs(lexer.EOF) {
 		parser.nextToken()
 		key := parser.parseExpression(LOWEST, lexer.ASSIGN)
 

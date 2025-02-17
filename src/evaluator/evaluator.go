@@ -101,6 +101,22 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 		return evalAssignExpression(node.Name.TokenLiteral(), node.Operator, val, env)
+	case *ast.WhileExpression:
+		for {
+			condition := Eval(node.Condition, env)
+			if isError(condition) {
+				return condition
+			}
+
+			if !isTruthy(condition) {
+				break
+			}
+
+			rt := Eval(node.Body, env)
+			if rt.Type() == object.RETURN_VALUE_OBJ || rt.Type() == object.ERROR_OBJ {
+				return rt
+			}
+		}
 	}
 	return nil
 }

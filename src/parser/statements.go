@@ -19,7 +19,7 @@ func (parser *Parser) parseStatementByComma() ast.Statement {
 	var token lexer.Token
 	isAssign := false
 	parser.peekTokenTemp(func() {
-		for parser.curToken.Type != lexer.LET && parser.curToken.Type != lexer.RETURN && parser.curToken.Type != lexer.EOF && !parser.curTokenIs(lexer.COMMA) {
+		for !parser.curTokenIs(lexer.LET) && !parser.curTokenIs(lexer.RETURN) && !parser.curTokenIs(lexer.EOF) && !parser.curTokenIs(lexer.COMMA) {
 			isAssign = parser.isCurTokenAny(lexer.ASSIGN, lexer.ASTER_EQ, lexer.PLUS_EQ, lexer.MINUS_EQ, lexer.SLASH_EQ) || isAssign
 			parser.nextToken()
 		}
