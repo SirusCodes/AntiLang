@@ -1,6 +1,10 @@
 package evaluator
 
-import "github.com/SirusCodes/anti-lang/src/object"
+import (
+	"fmt"
+
+	"github.com/SirusCodes/anti-lang/src/object"
+)
 
 var builtins = make(map[string]*object.Builtin)
 
@@ -179,7 +183,7 @@ func builtinRemoveAt(args ...object.Object) object.Object {
 
 func builtinPrint(args ...object.Object) object.Object {
 	for _, arg := range args {
-		println(arg.Inspect())
+		fmt.Println(arg.Inspect())
 	}
 	return NULL
 }

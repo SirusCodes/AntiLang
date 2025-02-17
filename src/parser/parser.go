@@ -44,6 +44,7 @@ var precedences = map[lexer.TokenType]int{
 	lexer.MINUS:    SUM,
 	lexer.SLASH:    PRODUCT,
 	lexer.ASTERISK: PRODUCT,
+	lexer.MOD:      MOD,
 	lexer.LBRACE:   CALL,
 }
 
@@ -93,9 +94,9 @@ func New(l *lexer.Lexer) *Parser {
 	parser.registerInfix(lexer.ASSIGN, parser.parseAssignExpression)
 	parser.registerInfix(lexer.EQ, parser.parseInfixExpression)
 	parser.registerInfix(lexer.GT, parser.parseInfixExpression)
-	parser.registerInfix(lexer.GT_EQ, parser.parseAssignExpression)
+	parser.registerInfix(lexer.GT_EQ, parser.parseInfixExpression)
 	parser.registerInfix(lexer.LT, parser.parseInfixExpression)
-	parser.registerInfix(lexer.LT_EQ, parser.parseAssignExpression)
+	parser.registerInfix(lexer.LT_EQ, parser.parseInfixExpression)
 	parser.registerInfix(lexer.MINUS, parser.parseInfixExpression)
 	parser.registerInfix(lexer.MINUS_EQ, parser.parseAssignExpression)
 	parser.registerInfix(lexer.MOD, parser.parseInfixExpression)

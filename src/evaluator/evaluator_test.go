@@ -78,6 +78,10 @@ func TestEvalBooleanExpression(t *testing.T) {
 		{"{1 < 2} != {1 < 2}", false},
 		{"{1 > 2} == {1 > 2}", true},
 		{"{1 > 2} != {1 > 2}", false},
+		{"2 % 2 == 0", true},
+		{"2 % 2 != 0", false},
+		{"1 <= 2", true},
+		{"2 <= 2", true},
 	}
 	for _, tt := range tests {
 		evaluated := utils.EvalTest(tt.input)
@@ -452,7 +456,7 @@ func TestWhileExpression(t *testing.T) {
 	input := `,0 = x let
 
 {x < 5} while [
-	,x += 1
+	,1 += x
 ]
 
 x
