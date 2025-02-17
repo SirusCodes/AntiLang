@@ -19,7 +19,7 @@ func (parser *Parser) parseStatementByComma() ast.Statement {
 	var token lexer.Token
 	isAssign := false
 	parser.peekTokenTemp(func() {
-		for parser.curToken.Type != lexer.LET && parser.curToken.Type != lexer.RETURN && parser.curToken.Type != lexer.EOF {
+		for parser.curToken.Type != lexer.LET && parser.curToken.Type != lexer.RETURN && parser.curToken.Type != lexer.EOF && !parser.curTokenIs(lexer.COMMA) {
 			isAssign = parser.isCurTokenAny(lexer.ASSIGN, lexer.ASTER_EQ, lexer.PLUS_EQ, lexer.MINUS_EQ, lexer.SLASH_EQ) || isAssign
 			parser.nextToken()
 		}
@@ -27,16 +27,13 @@ func (parser *Parser) parseStatementByComma() ast.Statement {
 		token = parser.curToken
 	})
 
-	if isAssign {
-		if token.Type == lexer.LET {
-			return parser.parseLetStatement()
-		}
-		return parser.parseExpressionStatement()
-	} else if token.Type == lexer.RETURN {
+	switch token.Type {
+	case lexer.LET:
+		return parser.parseLetStatement()
+	case lexer.RETURN:
 		return parser.parseReturnStatement()
-	} else {
-		parser.addGenericError("parser: expected token to be LET or RETURN, got " + token.Literal + " instead")
-		return nil
+	default:
+		return parser.parseExpressionStatement()
 	}
 }
 

@@ -64,6 +64,7 @@ func TestMultiStatementInAFunction(t *testing.T) {
 		,5 = five let
 		,55 = five
 
+		,{2}print
 		,five return
 	]`
 
@@ -84,8 +85,8 @@ func TestMultiStatementInAFunction(t *testing.T) {
 		t.Fatalf("est.Expression not *ast.FunctionExpression. got=%T", est.Expression)
 	}
 
-	if len(fn.Body.Statements) != 3 {
-		t.Fatalf("function.Body.Statements does not contain 3 statements. got=%d", len(fn.Body.Statements))
+	if len(fn.Body.Statements) != 4 {
+		t.Fatalf("function.Body.Statements does not contain 4 statements. got=%d", len(fn.Body.Statements))
 	}
 
 	stmt1, ok := fn.Body.Statements[0].(*ast.LetStatement)
@@ -106,12 +107,21 @@ func TestMultiStatementInAFunction(t *testing.T) {
 		t.Fatalf("stmt2.String() not '55 = five'. got=%q", stmt2.String())
 	}
 
-	stmt3, ok := fn.Body.Statements[2].(*ast.ReturnStatement)
+	stmt3, ok := fn.Body.Statements[2].(*ast.ExpressionStatement).Expression.(*ast.CallExpression)
+	if !ok {
+		t.Fatalf("stmt3 not *ast.CallExpression. got=%T", fn.Body.Statements[2])
+	}
+
+	if stmt3.String() != "({2}print)" {
+		t.Fatalf("stmt3.String() not '{2}print'. got=%q", stmt3.String())
+	}
+
+	stmt4, ok := fn.Body.Statements[3].(*ast.ReturnStatement)
 	if !ok {
 		t.Fatalf("stmt3 not *ast.ReturnStatement. got=%T", fn.Body.Statements[2])
 	}
 
-	if stmt3.ReturnValue.String() != "five" {
-		t.Fatalf("stmt3.ReturnValue.String() not 'five'. got=%q", stmt3.ReturnValue.String())
+	if stmt4.ReturnValue.String() != "five" {
+		t.Fatalf("stmt3.ReturnValue.String() not 'five'. got=%q", stmt4.ReturnValue.String())
 	}
 }
