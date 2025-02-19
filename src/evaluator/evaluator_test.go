@@ -130,6 +130,11 @@ func TestIfElseExpressions(t *testing.T) {
 		{"{1 > 2} if [ 10 ]", nil},
 		{"{1 > 2} if [ 10 ] else [ 20 ]", 20},
 		{"{1 < 2} if [ 10 ] else [ 20 ]", 10},
+		{"{1 > 2} if [ 10 ] {1 == 2} if else [ 20 ] else [ 30 ]", 30},
+		{"{1 > 2} if [ 10 ] {1 < 2} if else [ 20 ] else [ 30 ]", 20},
+		{"{1 < 2} if [ 10 ] {1 > 2} if else [ 20 ] else [ 30 ]", 10},
+		{"{1 < 2} if [ 10 ] {1 < 2} if else [ 20 ] else [ 30 ]", 10},
+		{"{1 > 2} if [ 10 ] {1 > 2} if else [ 20 ]", nil},
 	}
 	for _, tt := range tests {
 		evaluated := utils.EvalTest(tt.input)

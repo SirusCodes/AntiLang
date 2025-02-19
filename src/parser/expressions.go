@@ -97,7 +97,7 @@ func (parser *Parser) parseLBraceExpression() ast.Expression {
 		}
 		return parser.parseCallExpression()
 	case lexer.IF:
-		return parser.parseIfExpression()
+		return parser.parseConditionalExpression()
 	case lexer.WHILE:
 		return parser.parseWhileExpression()
 	default:
@@ -153,24 +153,21 @@ func (parser *Parser) parseFunctionParameters() []*ast.Identifier {
 	return identifiers
 }
 
-func (parser *Parser) parseIfExpression() ast.Expression {
-	ifExp := &ast.IfExpression{}
-
+func (parser *Parser) parseConditionalExpression() ast.Expression {
+	codExp := &ast.ConditionalExpression{}
 	if !parser.curTokenIsAndNext(lexer.LBRACE) {
-		parser.addError(lexer.LBRACE)
 		return nil
 	}
 
-	ifExp.Condition = parser.parseExpression(LOWEST, lexer.RBRACE)
+	codExp.Condition = parser.parseExpression(LOWEST, lexer.RBRACE)
 
 	parser.nextToken()
 
 	if !parser.peekTokenAndNext(lexer.IF) {
-		parser.addError(lexer.IF)
 		return nil
 	}
 
-	ifExp.Token = parser.curToken
+	codExp.Token = parser.curToken
 
 	if !parser.peekTokenIs(lexer.LSQBRAC) {
 		parser.addError(lexer.LSQBRAC)
@@ -179,20 +176,60 @@ func (parser *Parser) parseIfExpression() ast.Expression {
 
 	parser.nextToken()
 
-	ifExp.Consequence = parser.parseBlockStatement()
+	codExp.ExecutionBlock = parser.parseBlockStatement()
 
-	if parser.peekTokenIs(lexer.ELSE) {
-		parser.nextToken()
+	codExp.NextConditional = parser.parseElseIfLadder()
 
-		if !parser.peekTokenAndNext(lexer.LSQBRAC) {
-			parser.addError(lexer.LSQBRAC)
-			return nil
-		}
+	return codExp
+}
 
-		ifExp.Alternative = parser.parseBlockStatement()
+func (parser *Parser) parseElseIfLadder() *ast.ConditionalExpression {
+	parser.nextToken()
+
+	if parser.curTokenIs(lexer.ELSE) {
+		return parser.parseElseBlock()
 	}
 
-	return ifExp
+	if !parser.curTokenIs(lexer.LBRACE) {
+		return nil
+	}
+	parser.nextToken()
+
+	codExp := &ast.ConditionalExpression{}
+	codExp.Condition = parser.parseExpression(LOWEST, lexer.RBRACE)
+
+	parser.nextToken()
+
+	if !parser.peekTokenAndNext(lexer.IF) {
+		return nil
+	}
+
+	if !parser.peekTokenAndNext(lexer.ELSE) {
+		return nil
+	}
+
+	codExp.Token = parser.curToken
+
+	if !parser.peekTokenAndNext(lexer.LSQBRAC) {
+		return nil
+	}
+
+	codExp.ExecutionBlock = parser.parseBlockStatement()
+	codExp.NextConditional = parser.parseElseIfLadder()
+
+	return codExp
+}
+
+func (parser *Parser) parseElseBlock() *ast.ConditionalExpression {
+	if !parser.peekTokenAndNext(lexer.LSQBRAC) {
+		return nil
+	}
+
+	elseBlock := ast.ConditionalExpression{}
+	elseBlock.Token = parser.curToken
+	elseBlock.ExecutionBlock = parser.parseBlockStatement()
+	elseBlock.NextConditional = nil
+	return &elseBlock
 }
 
 func (parser *Parser) parseCallExpression() ast.Expression {

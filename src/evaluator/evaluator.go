@@ -41,7 +41,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return evalInfixExpression(node.Operator, left, right)
 	case *ast.BlockStatement:
 		return evalBlockStatements(node.Statements, env)
-	case *ast.IfExpression:
+	case *ast.ConditionalExpression:
 		return evalIfExpression(node, env)
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
@@ -272,15 +272,15 @@ func evalBooleanInfixExpression(operator string, left, right object.Object) obje
 	}
 }
 
-func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Object {
+func evalIfExpression(ie *ast.ConditionalExpression, env *object.Environment) object.Object {
 	condition := Eval(ie.Condition, env)
 	if isError(condition) {
 		return condition
 	}
 	if isTruthy(condition) {
-		return Eval(ie.Consequence, env)
-	} else if ie.Alternative != nil {
-		return Eval(ie.Alternative, env)
+		return Eval(ie.ExecutionBlock, env)
+	} else if ie.NextConditional != nil {
+		return Eval(ie.NextConditional, env)
 	} else {
 		return NULL
 	}

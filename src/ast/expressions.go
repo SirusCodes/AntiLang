@@ -77,30 +77,30 @@ func (pe *PrefixExpression) String() string {
 	return "(" + pe.Operator + pe.Right.String() + ")"
 }
 
-// IfExpression represents an if expression
-type IfExpression struct {
+// ConditionalExpression represents an if expression
+type ConditionalExpression struct {
 	Expression
-	Token       lexer.Token
-	Condition   Expression
-	Consequence *BlockStatement
-	Alternative *BlockStatement
+	Token           lexer.Token
+	Condition       Expression
+	ExecutionBlock  *BlockStatement
+	NextConditional *ConditionalExpression
 }
 
-func (i *IfExpression) TokenLiteral() string {
+func (i *ConditionalExpression) TokenLiteral() string {
 	return i.Token.Literal
 }
 
-func (i *IfExpression) String() string {
+func (i *ConditionalExpression) String() string {
 	var out bytes.Buffer
 
 	out.WriteString(i.Condition.String())
 	out.WriteString("if")
 	out.WriteString(" ")
-	out.WriteString(i.Consequence.String())
+	out.WriteString(i.ExecutionBlock.String())
 
-	if i.Alternative != nil {
+	if i.NextConditional != nil {
 		out.WriteString("else")
-		out.WriteString(i.Alternative.String())
+		out.WriteString(i.NextConditional.String())
 	}
 
 	return out.String()

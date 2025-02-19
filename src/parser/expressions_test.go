@@ -78,28 +78,28 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		input    string
 		expected string
 	}{
-		// {"-a * b", "((-a) * b)"},
-		// {"!-a", "(!(-a))"},
-		// {"a+b+c", "((a + b) + c)"},
-		// {"a+b-c", "((a + b) - c)"},
-		// {"a*b*c", "((a * b) * c)"},
-		// {"a*b/c", "((a * b) / c)"},
-		// {"a+b/c", "(a + (b / c))"},
-		// {"a+b*c+d/e-f", "(((a + (b * c)) + (d / e)) - f)"},
-		// {"5>4==3<4", "((5 > 4) == (3 < 4))"},
-		// {"5<4!=3>4", "((5 < 4) != (3 > 4))"},
-		// {"3+4*5==3*1+4*5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))"},
-		// {"true", "true"},
-		// {"false", "false"},
-		// {"3>5==false", "((3 > 5) == false)"},
-		// {"3<5==true", "((3 < 5) == true)"},
-		// {"1+{2+3}+4", "((1 + (2 + 3)) + 4)"},
-		// {"{5+5}*2", "((5 + 5) * 2)"},
-		// {"2/{5+5}", "(2 / (5 + 5))"},
-		// {"-{5+5}", "(-(5 + 5))"},
-		// {"!{true==true}", "(!(true == true))"},
-		// {"a + {b; c}add + d", "((a + ({b;c}add)) + d)"},
-		// {"a % b == c % d", "((a % b) == (c % d))"},
+		{"-a * b", "((-a) * b)"},
+		{"!-a", "(!(-a))"},
+		{"a+b+c", "((a + b) + c)"},
+		{"a+b-c", "((a + b) - c)"},
+		{"a*b*c", "((a * b) * c)"},
+		{"a*b/c", "((a * b) / c)"},
+		{"a+b/c", "(a + (b / c))"},
+		{"a+b*c+d/e-f", "(((a + (b * c)) + (d / e)) - f)"},
+		{"5>4==3<4", "((5 > 4) == (3 < 4))"},
+		{"5<4!=3>4", "((5 < 4) != (3 > 4))"},
+		{"3+4*5==3*1+4*5", "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))"},
+		{"true", "true"},
+		{"false", "false"},
+		{"3>5==false", "((3 > 5) == false)"},
+		{"3<5==true", "((3 < 5) == true)"},
+		{"1+{2+3}+4", "((1 + (2 + 3)) + 4)"},
+		{"{5+5}*2", "((5 + 5) * 2)"},
+		{"2/{5+5}", "(2 / (5 + 5))"},
+		{"-{5+5}", "(-(5 + 5))"},
+		{"!{true==true}", "(!(true == true))"},
+		{"a + {b; c}add + d", "((a + ({b;c}add)) + d)"},
+		{"a % b == c % d", "((a % b) == (c % d))"},
 		{"a <= b", "(a <= b)"},
 	}
 	for _, tt := range tests {
@@ -124,7 +124,7 @@ func TestIfExpression(t *testing.T) {
 		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
-	exp, ok := stmt.Expression.(*ast.IfExpression)
+	exp, ok := stmt.Expression.(*ast.ConditionalExpression)
 	if !ok {
 		t.Fatalf("stmt.Expression is not ast.IfExpression. got=%T", stmt.Expression)
 	}
@@ -133,21 +133,21 @@ func TestIfExpression(t *testing.T) {
 		return
 	}
 
-	if len(exp.Consequence.Statements) != 1 {
-		t.Errorf("consequence is not 1 statements. got=%d\n", len(exp.Consequence.Statements))
+	if len(exp.ExecutionBlock.Statements) != 1 {
+		t.Errorf("consequence is not 1 statements. got=%d\n", len(exp.ExecutionBlock.Statements))
 	}
 
-	consequence, ok := exp.Consequence.Statements[0].(*ast.ExpressionStatement)
+	consequence, ok := exp.ExecutionBlock.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.Consequence.Statements[0])
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.ExecutionBlock.Statements[0])
 	}
 
 	if !testIdentifier(t, consequence.Expression, "b") {
 		return
 	}
 
-	if exp.Alternative != nil {
-		t.Errorf("exp.Alternative.Statements was not nil. got=%+v", exp.Alternative)
+	if exp.NextConditional != nil {
+		t.Errorf("exp.NextConditional was not nil. got=%+v", exp.NextConditional)
 	}
 }
 
@@ -164,39 +164,121 @@ func TestIfElseExpression(t *testing.T) {
 		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
-	exp, ok := stmt.Expression.(*ast.IfExpression)
+	exp, ok := stmt.Expression.(*ast.ConditionalExpression)
 	if !ok {
-		t.Fatalf("stmt.Expression is not ast.IfExpression. got=%T", stmt.Expression)
+		t.Fatalf("stmt.Expression is not ast.ConditionalExpression. got=%T", stmt.Expression)
 	}
 
 	if !testInfixExpression(t, exp.Condition, "x", "<", "y") {
 		return
 	}
 
-	if len(exp.Consequence.Statements) != 1 {
-		t.Errorf("consequence is not 1 statements. got=%d\n", len(exp.Consequence.Statements))
+	if len(exp.ExecutionBlock.Statements) != 1 {
+		t.Errorf("ExecutionBlock is not 1 statements. got=%d\n", len(exp.ExecutionBlock.Statements))
 	}
 
-	consequence, ok := exp.Consequence.Statements[0].(*ast.ExpressionStatement)
+	consequence, ok := exp.ExecutionBlock.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.Consequence.Statements[0])
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.ExecutionBlock.Statements[0])
 	}
 
 	if !testIdentifier(t, consequence.Expression, "b") {
 		return
 	}
 
-	if len(exp.Alternative.Statements) != 1 {
-		t.Errorf("consequence is not 1 statements. got=%d\n", len(exp.Alternative.Statements))
+	if exp.NextConditional == nil {
+		t.Fatal("exp.NextConditional was nil.")
 	}
 
-	alternative, ok := exp.Alternative.Statements[0].(*ast.ExpressionStatement)
+	if len(exp.NextConditional.ExecutionBlock.Statements) != 1 {
+		t.Fatalf("ExecutionBlock.Statements is not 1 statements. got=%d\n", len(exp.NextConditional.ExecutionBlock.Statements))
+	}
+
+	alternative, ok := exp.NextConditional.ExecutionBlock.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.Alternative.Statements[0])
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.NextConditional.ExecutionBlock.Statements[0])
 	}
 
 	if !testIdentifier(t, alternative.Expression, "c") {
 		return
+	}
+}
+
+func TestIfElseLadderExpression(t *testing.T) {
+	input := "{x < y} if [ b ] {x > y} if else [ c ] else [ d ]"
+	program := utils.ParseInput(t, input)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	exp, ok := stmt.Expression.(*ast.ConditionalExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.ConditionalExpression. got=%T", stmt.Expression)
+	}
+
+	if !testInfixExpression(t, exp.Condition, "x", "<", "y") {
+		return
+	}
+
+	if len(exp.ExecutionBlock.Statements) != 1 {
+		t.Errorf("ExecutionBlock is not 1 statements. got=%d\n", len(exp.ExecutionBlock.Statements))
+	}
+
+	ifBlock, ok := exp.ExecutionBlock.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.ExecutionBlock.Statements[0])
+	}
+
+	if !testIdentifier(t, ifBlock.Expression, "b") {
+		return
+	}
+
+	if exp.NextConditional == nil {
+		t.Fatal("exp.NextConditional was nil.")
+	}
+
+	if !testInfixExpression(t, exp.NextConditional.Condition, "x", ">", "y") {
+		return
+	}
+
+	if len(exp.NextConditional.ExecutionBlock.Statements) != 1 {
+		t.Fatalf("ExecutionBlock.Statements is not 1 statements. got=%d\n", len(exp.NextConditional.ExecutionBlock.Statements))
+	}
+
+	elseIfBlock, ok := exp.NextConditional.ExecutionBlock.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.NextConditional.ExecutionBlock.Statements[0])
+	}
+
+	if !testIdentifier(t, elseIfBlock.Expression, "c") {
+		return
+	}
+
+	if exp.NextConditional.NextConditional == nil {
+		t.Fatal("exp.NextConditional.NextConditional was nil.")
+	}
+
+	if len(exp.NextConditional.NextConditional.ExecutionBlock.Statements) != 1 {
+		t.Fatalf("ExecutionBlock.Statements is not 1 statements. got=%d\n", len(exp.NextConditional.NextConditional.ExecutionBlock.Statements))
+	}
+
+	elseBlock, ok := exp.NextConditional.NextConditional.ExecutionBlock.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("Statements[0] is not ast.ExpressionStatement. got=%T", exp.NextConditional.NextConditional.ExecutionBlock.Statements[0])
+	}
+
+	if !testIdentifier(t, elseBlock.Expression, "d") {
+		return
+	}
+
+	if exp.NextConditional.NextConditional.NextConditional != nil {
+		t.Fatal("exp.NextConditional.NextConditional.NextConditional was not nil.")
 	}
 }
 
@@ -609,7 +691,7 @@ func TestIfBlockInFunction(t *testing.T) {
 		t.Fatalf("function.Body.Statements does not contain 1 statements. got=%d", len(function.Body.Statements))
 	}
 
-	ifExp, ok := function.Body.Statements[0].(*ast.ExpressionStatement).Expression.(*ast.IfExpression)
+	ifExp, ok := function.Body.Statements[0].(*ast.ExpressionStatement).Expression.(*ast.ConditionalExpression)
 	if !ok {
 		t.Fatalf("function.Body.Statements[0] is not ast.ExpressionStatement. got=%T", function.Body.Statements[0])
 	}
@@ -618,26 +700,26 @@ func TestIfBlockInFunction(t *testing.T) {
 		return
 	}
 
-	if len(ifExp.Consequence.Statements) != 1 {
-		t.Fatalf("consequence is not 1 statements. got=%d\n", len(ifExp.Consequence.Statements))
+	if len(ifExp.ExecutionBlock.Statements) != 1 {
+		t.Fatalf("consequence is not 1 statements. got=%d\n", len(ifExp.ExecutionBlock.Statements))
 	}
 
-	consequence, ok := ifExp.Consequence.Statements[0].(*ast.ReturnStatement)
+	consequence, ok := ifExp.ExecutionBlock.Statements[0].(*ast.ReturnStatement)
 	if !ok {
-		t.Fatalf("Statements[0] is not ast.ReturnStatement. got=%T", ifExp.Consequence.Statements[0])
+		t.Fatalf("Statements[0] is not ast.ReturnStatement. got=%T", ifExp.ExecutionBlock.Statements[0])
 	}
 
 	if !testIdentifier(t, consequence.ReturnValue, "x") {
 		return
 	}
 
-	if len(ifExp.Alternative.Statements) != 1 {
-		t.Fatalf("consequence is not 1 statements. got=%d\n", len(ifExp.Alternative.Statements))
+	if len(ifExp.NextConditional.ExecutionBlock.Statements) != 1 {
+		t.Fatalf("consequence is not 1 statements. got=%d\n", len(ifExp.NextConditional.ExecutionBlock.Statements))
 	}
 
-	alternative, ok := ifExp.Alternative.Statements[0].(*ast.ReturnStatement)
+	alternative, ok := ifExp.NextConditional.ExecutionBlock.Statements[0].(*ast.ReturnStatement)
 	if !ok {
-		t.Fatalf("Statements[0] is not ast.ReturnStatement. got=%T", ifExp.Alternative.Statements[0])
+		t.Fatalf("Statements[0] is not ast.ReturnStatement. got=%T", ifExp.NextConditional.ExecutionBlock.Statements[0])
 	}
 
 	if !testIdentifier(t, alternative.ReturnValue, "y") {
