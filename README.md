@@ -1,15 +1,17 @@
 # AntiLang
 
-> [!CAUTION]
-> For your own sanity please don't use this language.
+> [!CAUTION]  
+> For your own sanity, please don't use this language.
 
-All the modern programming languages are very similar with all the if, else, loops looks the same with some minor syntax changes.
+All modern programming languages are very similar. All the ifs, elses, and loops look the same with some minor syntax changes.  
+I was bored with them as they were not fun or interesting enough, hence **AntiLang**.
 
-I was bored with them as they were not fun/interesting enough, hence AntiLang.
+It **reverses** the structure of all the conditionals, loops, functions, everything, while keeping all the operators intact (I'm not that evil🙂). So get ready for some mind-bending coding that will make your brain do the FizzBuzz dance. 💃
 
-It reverses the structure of all the conditional. loops. functions. everything. while keeping all the operators intact (I'm not that evil🙂).
+Below is the syntax of the **FizzBuzz** program in **AntiLang**. 
 
-Below is the syntax of FizzBuzz program in AntiLang, I will work on complete docs with syntax highlighting and a basic website to run your code once I'm done writing the interpereter.
+> [!WARNING]  
+> May cause headaches and/or existential crises.
 
 ```
 {} main func [
@@ -18,13 +20,13 @@ Below is the syntax of FizzBuzz program in AntiLang, I will work on complete doc
 
     {count > i} while [
         {i % 3 == 0 && i % 5 == 0} if [
-            ,{$FizzBuzz$}print
+            ,{$It’s a FizzBuzz moment, boys!$}print
         ] {i % 3 == 0} if else [
-            ,{$Fizz$}print
+            ,{$Fizz is life, Buzz is overhyped$}print
         ] {i % 5 == 0} if else [
-            ,{$Buzz$}print
+            ,{$Buzzfeed has nothing on this$}print
         ] else [
-            ,{i}print
+            ,{$This is awkward... Why not just $i$?$}print
         ]
 
         ,1 += i
@@ -36,15 +38,15 @@ Below is the syntax of FizzBuzz program in AntiLang, I will work on complete doc
 
 ## Syntax
 
-### Variable declaration
+### Variable Declaration
 
-It's a dynamically typed language with supports int, string, map and array (might add floats well)
+It's a dynamically typed language that supports int, string, map, and array (might add floats as well, but why do we need more types?).
 
 ```
 ,<value> = <var name> let
 ```
 
-The declaration should start with a `,` and end with `let`.
+The declaration starts with a **comma** `,` (because commas are underrated) and ends with **let**. It's like a goodbye wave when you leave a party.
 
 ```
 ,10 = ten let
@@ -52,25 +54,22 @@ The declaration should start with a `,` and end with `let`.
 
 ### Operators
 
-I thought of keeping this same as all the other languages like hence it does exactly what is looks like. So `a + b` is actually `a + b` not `a - b`.
+I thought of keeping these the same as all the other languages, so `a + b` is actually **a + b**, not `a - b` (though I wanted to do that, but I’m not that evil, right?).
 
-PS: Doing otherwise was the plan.
+Supported operators:
 
-AntiLang Supports:
+- **+**, **-**, **/**, **\***, and **%** for arithmetic.
+- **&&**, **||**, and **!** for logical operators.
+- **=**, **+=**, **-=**, **/=**, and **\***= for assignment.
+- **<**, **>**, **<=**, **>=**, **==**, and **!=** for comparisons.
 
-- +, -, /, *, and % arithmetic operators
-- &&, ||, and ! logical operators
-- =, +=, -=, /=, and *= assignment operators
-- <, >, <=, >=, ==, and != comparison operators
+PS: Assignment operators are reversed to maintain consistency with `let` statements. So, `1 += i` will **increment** `i` by 1 (yeah, we like to keep things spicy).
 
-> [!Note]
-> I lied, assignment operators are reversed to maintain consistency with let statements. `1 += i` will be increment i by 1 and similarly for others. 
-
-### Data types
+### Data Types
 
 #### String
 
-Strings are declared using `$` sign (since it's generally used for string interpolation).
+Strings are declared with the `$` sign because it's generally used for **string interpolation**, but I like to think of it as giving your strings a fresh haircut.
 
 ```
 ,$Hello Hell!$ = string let
@@ -78,13 +77,13 @@ Strings are declared using `$` sign (since it's generally used for string interp
 
 #### Array
 
-I hope you might have assumed it that array would be declared with a `(` and `)`, and separated by `;`.
+Arrays are declared with **`(`** and **`)`**, and values are **separated by `;`**. You know, just because it's cooler that way.
 
 ```
 ,(1; $Hello$) = array let
 ```
 
-Index starts with **0** (come on I'm not that evil) but you have to specify the index before the variable name.
+Indices start at **0** (don’t worry, we’re not that cruel). But, here's the twist: you have to specify the index before the variable name! It’s like a riddle wrapped in a mystery inside an array.
 
 ```
 ,(1)array
@@ -92,9 +91,7 @@ Index starts with **0** (come on I'm not that evil) but you have to specify the 
 
 #### Map
 
-Maps use `[` and `]` instead of `{` and `}` and assignment is done using `=` instead of `:`.
-
-Again I have kept mapping to be **key=value** pairs and similar to array you have to pass the keys before the variable. 
+Maps use **`[`** and **`]`** instead of `{}`. Assignment is done using **`=`** instead of `:`. Why? Because why not.
 
 ```
 ,[$Hello$ = 1; $Hell$ = 6] = map let
@@ -103,9 +100,9 @@ Again I have kept mapping to be **key=value** pairs and similar to array you hav
 
 ### Functions
 
-In AntiLang Functions are first class citizen, means you can pass functions as parameters. Surprised? such a stupid langugage can do it and Java couldn't (which runs on more than 3 billion devices)
+Functions are first-class citizens here in AntiLang. You can pass functions as parameters, like a boss (take that, Java!).
 
-As we know syntax will be a weird.
+Here's how functions are declared (don’t worry, it gets weird):
 
 ```
 {a; b}add func [
@@ -115,17 +112,15 @@ As we know syntax will be a weird.
 ,{1; 1}add
 ```
 
-and obviously you return like that...
+To return values, we use:
 
 ```
 ,<value> return
 ```
 
-### Builtin Functions
+### Built-in Functions
 
-AntiLang have a support for a bunch of builtin function. I might add a few more - just [open an issue](https://github.com/SirusCodes/AntiLang/issues/new) for it.
-
-Currently it supports:
+AntiLang has a small set of built-in functions, and I might add more in the future if you leave me some memes (or suggestions). So far, we support:
 
 - `{array|string}len`: Returns the length of an array or string.
 - `{array}first`: Returns the first element of an array.
@@ -137,9 +132,9 @@ Currently it supports:
 - `{array; index}removeAt`: Removes an element at a specified index in an array.
 - `{value}print`: Prints the value to the console.
 
-### Conditonal Flows
+### Conditional Flows
 
-We support if, else and else if conditional flows.
+Yes, we have `if`, `else`, and `else if` just like any normal language. But here, we like to add a little fun.
 
 ```
 {a < b} if [
@@ -147,13 +142,15 @@ We support if, else and else if conditional flows.
 ] {a > b} if else [
     ,{$a is greater$}print
 ] else [
-    ,{$They are same$}print
+    ,{$They are the same$}print
 ]
 ```
 
 ### Loops
 
-Currently AntiLang only supports `while` loop (I'm lazy to implement `for` loop). If this repo gets 100 stars I will do it 🤞
+Right now, AntiLang only supports the **while** loop. I'm too lazy to implement the `for` loop. If this repo gets **100 stars**, I might just go ahead and do it. 🤞
+
+Here’s an example of a **while loop**:
 
 ```
 ,0 = i let
@@ -163,6 +160,18 @@ Currently AntiLang only supports `while` loop (I'm lazy to implement `for` loop)
 ]
 ```
 
-## Suggestions
+### Suggestions
 
-Do let me know if you think there is a way to make this language a bit more interesting and fun by raising a [suggestion issue](https://github.com/SirusCodes/AntiLang/issues/new).
+Do you have a better idea to make this language more interesting? Or just want to send a meme for the fun of it? [Open an issue](https://github.com/SirusCodes/AntiLang/issues/new) and let’s see what we can do to make coding **weirder and funnier**.
+
+Or you can just send a meme. I’ll be fine with that too.
+
+---
+
+### All the best
+
+- AntiLang is all about **reversing logic** but **keeping the operators intact** (well, almost).
+- You’re going to be spending more time figuring out the structure than the logic of your program. #TrueCoderPain
+- If you think the syntax is confusing, just remember: you're probably just not **AntiLang-ready** yet. It'll get easier (maybe). 😅
+  
+Go ahead, give it a try, and remember to keep your sanity in check. After all, **AntiLang** is not about getting the job done quickly; it's about having fun while losing your mind. 😜
