@@ -2,11 +2,15 @@
 apt-get update
 apt-get install -y curl git jq
 
-curl -OL https://go.dev/dl/go1.24.linux-amd64.tar.gz
-tar -C /usr/local -xzf go1.24.linux-amd64.tar.gz
-rm go1.24.linux-amd64.tar.gz
+VERSION="1.24.0"
 
-$GOPATH="/usr/local/go/bin"
-echo "PATH=\"$PATH:$GOPATH\"" >> ~/.profile
-echo "PATH=\"$PATH:$GOPATH/bin\"" >> ~/.profile
+curl -OL https://go.dev/dl/go$VERSION.linux-amd64.tar.gz
+tar -C /usr/local -xzf go$VERSION.linux-amd64.tar.gz
+rm go$VERSION.linux-amd64.tar.gz
 
+GOPATH="/usr/local/go"
+echo "PATH=\"$PATH:$GOPATH:$GOPATH/bin\"" >> ~/.profile
+
+source ~/.profile
+
+go get -u -v golang.org/x/tools/cmd/gopls
