@@ -1,18 +1,14 @@
 ,1 = i let
 
-{i < 16} while [
+{i <= 15} while [
     {i % 3 == 0 && i % 5 == 0} if [
         ,{$FizzBuzz$}print
+    ] {i % 3 == 0} if else  [
+        ,{$Fizz$}print
+    ] {i % 5 == 0} if else [
+        ,{$Buzz$}print
     ] else [
-        {i % 3 == 0} if [
-            ,{$Fizz$}print
-        ] else [
-            {i % 5 == 0} if [
-                ,{$Buzz$}print
-            ] else [
-                ,{i}print
-            ]
-        ]
+        ,{i}print
     ]
 
     ,1 += i
