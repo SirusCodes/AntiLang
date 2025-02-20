@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>AntiLang Interpreter</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="header">
+            <div class="title">AntiLang</div>
+            <div class="repo-link">
+                <a href="https://github.com/SirusCodes/AntiLang" target="_blank">
+                    <img src="github.png" alt="GitHub" class="github-icon">
+                </a>
+            </div>
+        </div>
+        <div class="toolbar">
+            <button id="runButton" class="button">Run</button>
+        </div>
+        <textarea id="codeArea" placeholder="Write your code here..." spellcheck="false"></textarea>
+        <div id="terminal" class="terminal"></div>
+
+        <script src="wasm_exec.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
