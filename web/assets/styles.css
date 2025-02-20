@@ -99,3 +99,23 @@ body {
     font-size: 14px;
     border-radius: 4px;
 }
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2C2C2C;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #424242;
+    border-radius: 6px;
+    border: 3px solid #2C2C2C;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #616161;
+}
