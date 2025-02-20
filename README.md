@@ -1,3 +1,6 @@
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fsiruscodes.github.io%2FAntiLang%2F&style=flat&label=Online%20interpreter)
+![GitHub Release](https://img.shields.io/github/v/release/SirusCodes/AntiLang?style=flat)
+
 # AntiLang
 
 > [!CAUTION]  
@@ -26,7 +29,7 @@ Below is the syntax of the **FizzBuzz** program in **AntiLang**.
         ] {i % 5 == 0} if else [
             ,{$Buzzfeed has nothing on this$}print
         ] else [
-            ,{$This is awkward... Why not just $+ i+ $?$}print
+            ,{$This is awkward... Why not just $ + i + $?$}print
         ]
 
         ,1 += i
@@ -34,7 +37,17 @@ Below is the syntax of the **FizzBuzz** program in **AntiLang**.
 
     ,0 return
 ]
+
+,{}main
 ```
+
+Any self-respecting developer would skip the rest of the documentation and run the code above immediately. Don't worry, you can run AntiLang directly from your browser - [AntiLang](https://siruscodes.github.io/AntiLang/). See you soon, because you'll need it...
+
+## Installation
+
+I don't know why anyone would want to run this locally, but if you do (I'm not judging you), head over to the [release page](https://github.com/SirusCodes/AntiLang/releases) and get the latest binary for your system. Just remember, with great power comes great responsibility (and possibly a headache).
+
+For those who prefer convenience (and sanity), use the [online interpreter](https://siruscodes.github.io/AntiLang/). (I've spent significant time on this, so please use it)
 
 ## Syntax
 
@@ -63,7 +76,7 @@ Supported operators:
 - **=**, **+=**, **-=**, **/=**, and **\***= for assignment.
 - **<**, **>**, **<=**, **>=**, **==**, and **!=** for comparisons.
 
-PS: Assignment operators are reversed to maintain consistency with `let` statements. So, `1 += i` will **increment** `i` by 1 (yeah, we like to keep things spicy).
+PS: Assignment operators are reversed to maintain consistency with `let` statements. So, `1 += i` will **increment** `i` by 1 (yeah, I like to keep things spicy).
 
 ### Data Types
 
@@ -83,7 +96,7 @@ Arrays are declared with **`(`** and **`)`**, and values are **separated by `;`*
 ,(1; $Hello$) = array let
 ```
 
-Indices start at **0** (don’t worry, we’re not that cruel). But, here's the twist: you have to specify the index before the variable name! It’s like a riddle wrapped in a mystery inside an array.
+Indices start at **0** (don’t worry, we’re not that cruel). But, you have to specify the index before the variable name!
 
 ```
 ,(1)array
@@ -174,4 +187,4 @@ Or you can just send a meme. I’ll be fine with that too.
 - You’re going to be spending more time figuring out the structure than the logic of your program. #TrueCoderPain
 - If you think the syntax is confusing, just remember: you're probably just not **AntiLang-ready** yet. It'll get easier (maybe). 😅
   
-Go ahead, give it a try, and remember to keep your sanity in check. After all, **AntiLang** is not about getting the job done quickly; it's about having fun while losing your mind. 😜
+Go ahead, give it a [try](https://siruscodes.github.io/AntiLang/), and remember to keep your sanity in check. After all, **AntiLang** is not about getting the job done quickly; it's about having fun while losing your mind. 😜
