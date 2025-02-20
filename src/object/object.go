@@ -36,6 +36,7 @@ type Integer struct {
 
 func (i *Integer) Type() ObjectTypes { return INTEGER_OBJ }
 func (i *Integer) Inspect() string   { return fmt.Sprint(i.Value) }
+func (i *Integer) String() string    { return fmt.Sprint(i.Value) }
 
 type Boolean struct {
 	Hashable

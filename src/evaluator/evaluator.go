@@ -201,6 +201,10 @@ func evalInfixExpression(operator string, left, right object.Object) object.Obje
 		return evalIntegerInfixExpression(operator, left, right)
 	case left.Type() == object.BOOLEAN_OBJ && right.Type() == object.BOOLEAN_OBJ:
 		return evalBooleanInfixExpression(operator, left, right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.INTEGER_OBJ:
+		return evalStringInfixExpression(operator, left, convertIntegerObjectToString(right))
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.STRING_OBJ:
+		return evalStringInfixExpression(operator, convertIntegerObjectToString(left), right)
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
@@ -468,4 +472,8 @@ func evalAssignExpression(name, operator string, value object.Object, env *objec
 	}
 
 	return NULL
+}
+
+func convertIntegerObjectToString(obj object.Object) object.Object {
+	return &object.String{Value: fmt.Sprintf("%d", obj.(*object.Integer).Value)}
 }

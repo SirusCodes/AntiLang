@@ -26,7 +26,7 @@ Below is the syntax of the **FizzBuzz** program in **AntiLang**.
         ] {i % 5 == 0} if else [
             ,{$Buzzfeed has nothing on this$}print
         ] else [
-            ,{$This is awkward... Why not just $i$?$}print
+            ,{$This is awkward... Why not just $+ i+ $?$}print
         ]
 
         ,1 += i

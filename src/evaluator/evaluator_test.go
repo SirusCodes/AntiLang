@@ -283,14 +283,24 @@ func TestStringLiteral(t *testing.T) {
 }
 
 func TestStringConcatenation(t *testing.T) {
-	input := `$Hello$ + $ $ + $World!$`
-	evaluated := utils.EvalTest(input)
-	str, ok := evaluated.(*object.String)
-	if !ok {
-		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{`$Hello$ + $ $ + $World!$`, "Hello World!"},
+		{`$Hello$ + 1 + $World!$`, "Hello1World!"},
+		{`$Hello$ + 1`, "Hello1"},
+		{`1 + $Hello$`, "1Hello"},
 	}
-	if str.Value != "Hello World!" {
-		t.Errorf("String has wrong value. got=%q", str.Value)
+	for _, tt := range tests {
+		evaluated := utils.EvalTest(tt.input)
+		str, ok := evaluated.(*object.String)
+		if !ok {
+			t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+		}
+		if str.Value != tt.expected {
+			t.Errorf("String has wrong value. got=%q", str.Value)
+		}
 	}
 }
 
