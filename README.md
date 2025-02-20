@@ -1,7 +1,7 @@
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fsiruscodes.github.io%2FAntiLang%2F&style=flat&label=Online%20interpreter)
 ![GitHub Release](https://img.shields.io/github/v/release/SirusCodes/AntiLang?style=flat)
 
-# AntiLang
+# AntiLang - breaking all the conventions
 
 > [!CAUTION]  
 > For your own sanity, please don't use this language.
