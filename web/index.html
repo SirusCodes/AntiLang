@@ -1,16 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <title>AntiLang Interpreter</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="styles.css">
+        <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="./assets/styles.css">
     </head>
     <body>
         <div class="header">
-            <div class="title">AntiLang</div>
+            <div class="logo-title">
+                <div class="logo">
+                    <img src="./assets/logo.png" alt="Logo" class="logo-icon">
+                </div>
+                <div class="title">AntiLang</div>
+            </div>
             <div class="repo-link">
                 <a href="https://github.com/SirusCodes/AntiLang" target="_blank">
-                    <img src="github.png" alt="GitHub" class="github-icon">
+                    <img src="./assets/github.png" alt="GitHub" class="github-icon">
                 </a>
             </div>
         </div>
@@ -21,6 +29,6 @@
         <div id="terminal" class="terminal"></div>
 
         <script src="wasm_exec.js"></script>
-        <script src="script.js"></script>
+        <script src="./assets/script.js"></script>
     </body>
 </html>

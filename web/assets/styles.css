@@ -1,8 +1,8 @@
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #263238;
-    color: #c5c6c7;
+    background-color: #121212;
+    color: #E0E0E0;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -12,14 +12,13 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 10px 20px;
-    background-color: #37474F;
+    background-color: #1E1E1E;
     color: white;
     align-items: center;
 }
 
 .title {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 25px;
 }
 
 .repo-link a {
@@ -32,20 +31,29 @@ body {
     height: 24px;
 }
 
+.logo-icon {
+    width: 60px;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+}
+
 .toolbar {
     display: flex;
     justify-content: flex-start;
     padding: 10px 20px;
-    background-color: #455A64;
+    background-color: #2C2C2C;
     align-items: center;
 }
 
 .button {
     margin-right: 10px;
-    background-color: #80CBC4;
+    background-color: #424242;
     border: none;
     padding: 10px 20px;
-    color: #263238;
+    color: #E0E0E0;
     cursor: pointer;
     border-radius: 4px;
     font-size: 14px;
@@ -53,7 +61,7 @@ body {
 }
 
 .button:hover {
-    background-color: #4DB6AC;
+    background-color: #616161;
 }
 
 #codeArea {
@@ -65,8 +73,8 @@ body {
     box-sizing: border-box;
     font-family: monospace;
     font-size: 16px;
-    background-color: #37474F;
-    color: #c5c6c7;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
     resize: none;
     overflow-y: auto;
     border-radius: 4px;
