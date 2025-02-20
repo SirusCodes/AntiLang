@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Latest Rust
+      - name: Install Go 1.24.0
         uses: actions/setup-go@v5
         with:
           go-version: '1.24.0'
@@ -41,7 +41,7 @@ jobs:
             else
               go_file_path="main.go"
             fi
-            go build -o "$output_name" "$go_file_path"
+            GOOS="$GOOS" GOARCH="$GOARCH" go build -o "$output_name" "$go_file_path"
           done
 
       - name: Release Tags
