@@ -3,45 +3,28 @@ WebAssembly.instantiateStreaming(fetch("antilang.wasm"), go.importObject).then((
     go.run(result.instance);
 });
 
+const terminal = document.getElementById("terminal");
+const terminalContent = document.querySelector(".terminal-content");
+
 document.getElementById("runButton").addEventListener("click", () => {
     clearTerminal();
+    terminal.classList.add("visible");
 
-    const code = document.getElementById("codeArea").value;
+    const code = window.editor.getValue();
     window.execute(code);
 });
 
 document.addEventListener("stdout", (e) => {
-    const terminal = document.getElementById("terminal");
     const span = document.createElement("span");
     span.textContent = e.detail;
-    terminal.appendChild(span);
-    terminal.scrollTop = terminal.scrollHeight;
+    terminalContent.appendChild(span);
+    terminalContent.scrollTop = terminalContent.scrollHeight;
 });
 
-function clearTerminal() {
-    const terminal = document.getElementById("terminal");
-    terminal.innerHTML = "";
+function closeTerminal() {
+    terminal.classList.remove("visible");
 }
 
-document.getElementById("codeArea").value = `{} main func [
-    ,100 = count let
-    ,0 = i let
-
-    {count > i} while [
-        {i % 3 == 0 && i % 5 == 0} if [
-            ,{$It’s a FizzBuzz moment, boys!$}print
-        ] {i % 3 == 0} if else [
-            ,{$Fizz is life, Buzz is overhyped$}print
-        ] {i % 5 == 0} if else [
-            ,{$Buzzfeed has nothing on this$}print
-        ] else [
-            ,{$This is awkward... Why not just $ + i + $?$}print
-        ]
-
-        ,1 += i
-    ]
-
-    ,0 return
-]
-
-,{}main`
+function clearTerminal() {
+    terminalContent.innerHTML = "";
+}

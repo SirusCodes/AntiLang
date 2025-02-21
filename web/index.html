@@ -25,10 +25,18 @@
         <div class="toolbar">
             <button id="runButton" class="button">Run</button>
         </div>
-        <textarea id="codeArea" placeholder="Write your code here..." spellcheck="false"></textarea>
-        <div id="terminal" class="terminal"></div>
+        <div id="codeArea"></div>
+        <div id="terminal" class="terminal">
+            <div class="terminal-header">
+                <span>Terminal</span>
+                <button type="button" class="close-button" onclick="closeTerminal()">✖</button>
+            </div>
+            <div class="terminal-content"></div>
+        </div>
 
         <script src="wasm_exec.js"></script>
         <script src="./assets/script.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+        <script src="./assets/monaco_config.js"></script>
     </body>
 </html>
