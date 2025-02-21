@@ -43,11 +43,35 @@ Below is the syntax of the **FizzBuzz** program in **AntiLang**.
 
 Any self-respecting developer would skip the rest of the documentation and run the code above immediately. Don't worry, you can run AntiLang directly from your browser - [AntiLang](https://siruscodes.github.io/AntiLang/). See you soon, because you'll need it...
 
-## Installation
+## How can I try it?
+
+For those who prefer convenience (and sanity), use the [online interpreter](https://siruscodes.github.io/AntiLang/). (I've spent significant time on this, so please use it!)
 
 I don't know why anyone would want to run this locally, but if you do (I'm not judging you), head over to the [release page](https://github.com/SirusCodes/AntiLang/releases) and get the latest binary for your system. Just remember, with great power comes great responsibility (and possibly a headache).
 
-For those who prefer convenience (and sanity), use the [online interpreter](https://siruscodes.github.io/AntiLang/). (I've spent significant time on this, so please use it)
+## Run it
+
+Once you have [downloaded the binary](#how-can-i-try-it) as per your OS and ARCH you can run AntiLang programs by using `antilang run <filename>.al` (use `.al` as file extension).
+
+You can download one of our [samples](https://github.com/SirusCodes/AntiLang/tree/main/sample)
+
+```sh
+curl -O https://raw.githubusercontent.com/SirusCodes/AntiLang/refs/heads/main/sample/fizzbuzz.al
+
+./antilang run fizzbuzz.al
+```
+
+For Windows -
+
+```pwsh
+Invoke-WebRequest "https://raw.githubusercontent.com/SirusCodes/AntiLang/refs/heads/main/sample/fizzbuzz.al" -Outfile fizzbuzz.al
+
+.\antilang.exe run .\fizzbuzz.al
+```
+
+## AntiLang has a REPL 🙀
+
+To run REPL just run `antilang repl` and it should start REPL (Read Evaluate Print Loop).
 
 ## Syntax
 
