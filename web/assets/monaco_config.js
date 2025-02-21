@@ -26,9 +26,6 @@ require(['vs/editor/editor.main'], function () {
 
     // Register a tokens provider for the language
     monaco.languages.setMonarchTokensProvider("antilang", {
-        defaultToken: 'invalid',
-        tokenPostfix: '.anti',
-
         keywords: [
             'let', 'func', 'while', 'return', 'null', 'if', 'else', 'true', 'false'
         ],
