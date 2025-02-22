@@ -8,6 +8,7 @@ const terminalContent = document.querySelector(".terminal-content");
 const sampleSelector = document.getElementById("sampleSelector");
 
 document.getElementById("runButton").addEventListener("click", () => {
+    umami.track(`run_code_${sampleSelector.value}`);
     clearTerminal();
     terminal.classList.add("visible");
 
