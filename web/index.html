@@ -23,7 +23,10 @@
             </div>
         </div>
         <div class="toolbar">
-            <button id="runButton" class="button">Run</button>
+            <div class="button-group">
+                <button id="runButton" class="button">Run</button>
+                <button id="featuresButton" class="button" onclick="window.open('https://github.com/SirusCodes/AntiLang#table-of-contents', '_blank')">Supported Features</button>
+            </div>
             <select id="sampleSelector" class="button">
             </select>
         </div>
@@ -35,7 +38,7 @@
             </div>
             <div class="terminal-content"></div>
         </div>
-
+        <!-- Remove the features dialog -->
         <script src="wasm_exec.js"></script>
         <script src="./assets/script.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>

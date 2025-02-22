@@ -65,6 +65,19 @@ body {
     background-color: #616161;
 }
 
+.button-group {
+    display: flex;
+}
+
+.button-group .button {
+    margin-right: 10px;
+}
+
+/* Ensure the last button in the group does not have a right margin */
+.button-group .button:last-child {
+    margin-right: 0;
+}
+
 #codeArea {
     flex: 1;
     overflow: hidden;
