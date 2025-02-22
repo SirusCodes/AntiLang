@@ -146,3 +146,12 @@ body {
 .terminal-content::-webkit-scrollbar-thumb:hover {
     background-color: #757575;
 }
+
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    color: #ffffff;
+}

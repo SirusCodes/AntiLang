@@ -214,4 +214,7 @@ require(['vs/editor/editor.main'], function () {
         language: "antilang",
         theme: "antilangTheme"
     });
+
+    // Hide the loading spinner once the editor is loaded
+    document.getElementById("loadingSpinner").style.display = "none";
 });
