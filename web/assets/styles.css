@@ -43,7 +43,7 @@ body {
 
 .toolbar {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     padding: 5px 10px;
     background-color: #000;
     align-items: center;
