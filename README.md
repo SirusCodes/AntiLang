@@ -43,6 +43,25 @@ Below is the syntax of the **FizzBuzz** program in **AntiLang**.
 
 Any self-respecting developer would skip the rest of the documentation and run the code above immediately. Don't worry, you can run AntiLang directly from your browser - [AntiLang](https://siruscodes.github.io/AntiLang/). See you soon, because you'll need it...
 
+## Table of Contents
+- [AntiLang - breaking all the conventions](#antilang---breaking-all-the-conventions)
+- [How can I try it?](#how-can-i-try-it)
+- [Run it](#run-it)
+- [AntiLang has a REPL 🙀](#antilang-has-a-repl-)
+- [Syntax](#syntax)
+  - [Variable Declaration](#variable-declaration)
+  - [Operators](#operators)
+  - [Data Types](#data-types)
+    - [String](#string)
+    - [Array](#array)
+    - [Map](#map)
+  - [Functions](#functions)
+  - [Built-in Functions](#built-in-functions)
+  - [Conditional Flows](#conditional-flows)
+  - [Loops](#loops)
+- [Suggestions](#suggestions)
+- [All the best](#all-the-best)
+
 ## How can I try it?
 
 For those who prefer convenience (and sanity), use the [online interpreter](https://siruscodes.github.io/AntiLang/). (I've spent significant time on this, so please use it!)
