@@ -97,7 +97,7 @@ To run REPL just run `antilang repl` and it should start REPL (Read Evaluate Pri
 
 ### Variable Declaration
 
-It's a dynamically typed language that supports int, string, map, and array (might add floats as well, but why do we need more types?).
+It's a dynamically typed language that supports int, float, string, map, and array.
 
 ```
 ,<value> = <var name> let
