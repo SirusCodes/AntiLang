@@ -60,5 +60,5 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           commit_message: update wasm file for ${{ github.ref }}
-          files: ./web/antilang.wasm
           branch: main
+          file_pattern: web/antilang.wasm
