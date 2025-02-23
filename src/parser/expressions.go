@@ -72,6 +72,21 @@ func (parser *Parser) parseIntegerLiteral() ast.Expression {
 	return itl
 }
 
+func (parser *Parser) parseFloatLiteral() ast.Expression {
+	ftl := &ast.FloatLiteral{Token: parser.curToken}
+
+	value, err := strconv.ParseFloat(parser.curToken.Literal, 64)
+
+	if err != nil {
+		msg := "could not parse " + parser.curToken.Literal + " as float"
+		parser.errors = append(parser.errors, msg)
+		return nil
+	}
+
+	ftl.Value = value
+	return ftl
+}
+
 func (parser *Parser) parseBoolean() ast.Expression {
 	return &ast.BooleanLiteral{Token: parser.curToken, Value: parser.curTokenIs(lexer.TRUE)}
 }

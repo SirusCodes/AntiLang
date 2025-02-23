@@ -56,6 +56,9 @@ func TestParsingInfixExpression(t *testing.T) {
 		{"5<5", 5, "<", 5},
 		{"5==5", 5, "==", 5},
 		{"5!=5", 5, "!=", 5},
+		{"true==true", true, "==", true},
+		{"true!=false", true, "!=", false},
+		{"1.3 + 1.3", 1.3, "+", 1.3},
 	}
 	for _, tt := range infixTests {
 		program := utils.ParseInput(t, tt.input)
@@ -97,6 +100,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		{"{5+5}*2", "((5 + 5) * 2)"},
 		{"2/{5+5}", "(2 / (5 + 5))"},
 		{"-{5+5}", "(-(5 + 5))"},
+		{"5.1 + 0.9", "(5.1 + 0.9)"},
 		{"!{true==true}", "(!(true == true))"},
 		{"a + {b; c}add + d", "((a + ({b;c}add)) + d)"},
 		{"a % b == c % d", "((a % b) == (c % d))"},
@@ -770,6 +774,8 @@ func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{
 		return testIntegerLiteral(t, exp, int64(v))
 	case int64:
 		return testIntegerLiteral(t, exp, v)
+	case float64:
+		return testFloatLiteral(t, exp, v)
 	case bool:
 		return testBooleanLiteral(t, exp, v)
 	case string:
@@ -809,6 +815,19 @@ func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	if integ.TokenLiteral() != fmt.Sprintf("%d", value) {
 		t.Errorf("integ.TokenLiteral not %d. got=%s", value,
 			integ.TokenLiteral())
+		return false
+	}
+	return true
+}
+
+func testFloatLiteral(t *testing.T, fl ast.Expression, value float64) bool {
+	float, ok := fl.(*ast.FloatLiteral)
+	if !ok {
+		t.Errorf("fl not *ast.FloatLiteral. got=%T", fl)
+		return false
+	}
+	if float.Value != value {
+		t.Errorf("float.Value not %f. got=%f", value, float.Value)
 		return false
 	}
 	return true

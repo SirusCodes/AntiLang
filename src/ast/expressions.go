@@ -192,6 +192,21 @@ func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
 
+// FloatLiteral represents a float literal
+type FloatLiteral struct {
+	Expression
+	Token lexer.Token
+	Value float64
+}
+
+func (fl *FloatLiteral) TokenLiteral() string {
+	return fl.Token.Literal
+}
+
+func (fl *FloatLiteral) String() string {
+	return fl.Token.Literal
+}
+
 // BooleanLiteral represents a boolean literal
 type BooleanLiteral struct {
 	Expression

@@ -31,6 +31,10 @@ func TestNextToken(t *testing.T) {
 	$foo bar$
 
 	(a; b; c)
+
+	1.2
+
+	1.x
 `
 
 	tests := []struct {
@@ -128,6 +132,11 @@ func TestNextToken(t *testing.T) {
 		{SEMICOLON, ";"},
 		{IDENT, "c"},
 		{RPAREN, ")"},
+
+		{FLOAT, "1.2"},
+		{INT, "1"},
+		{ILLEGAL, "."},
+		{IDENT, "x"},
 	}
 
 	l := New(input)

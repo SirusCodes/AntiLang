@@ -11,6 +11,7 @@ import (
 
 const (
 	INTEGER_OBJ      = "INTEGER"
+	FLOAT_OBJ        = "FLOAT"
 	BOOLEAN_OBJ      = "BOOLEAN"
 	NULL_OBJ         = "NULL"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
@@ -37,6 +38,15 @@ type Integer struct {
 func (i *Integer) Type() ObjectTypes { return INTEGER_OBJ }
 func (i *Integer) Inspect() string   { return fmt.Sprint(i.Value) }
 func (i *Integer) String() string    { return fmt.Sprint(i.Value) }
+
+type Float struct {
+	Hashable
+	Value float64
+}
+
+func (f *Float) Type() ObjectTypes { return FLOAT_OBJ }
+func (f *Float) Inspect() string   { return fmt.Sprint(f.Value) }
+func (f *Float) String() string    { return fmt.Sprint(f.Value) }
 
 type Boolean struct {
 	Hashable
