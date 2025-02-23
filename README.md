@@ -53,6 +53,7 @@ Any self-respecting developer would skip the rest of the documentation and run t
   - [Operators](#operators)
   - [Data Types](#data-types)
     - [String](#string)
+    - [Float](#float)
     - [Array](#array)
     - [Map](#map)
   - [Functions](#functions)
@@ -129,6 +130,14 @@ Strings are declared with the `$` sign because it's generally used for **string 
 
 ```
 ,$Hello Hell!$ = string let
+```
+
+#### Float
+
+Initially I thought to use `,` for float but ended use using `.` for floats. If you think it was a mistake [let me know](https://github.com/SirusCodes/AntiLang/issues/new).
+
+```
+,3.14 = pi let
 ```
 
 #### Array
