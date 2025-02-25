@@ -148,7 +148,7 @@ Arrays are declared with **`(`** and **`)`**, and values are **separated by `;`*
 ,(1; $Hello$) = array let
 ```
 
-Indices start at **0** (don’t worry, we’re not that cruel). But, you have to specify the index before the variable name!
+Indices start at **1** (I'm sorry you forced me... [#1](https://github.com/SirusCodes/AntiLang/issues/1)). Also, you have to specify the index before the variable name!
 
 ```
 ,(1)array

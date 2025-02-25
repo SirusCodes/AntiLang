@@ -430,13 +430,17 @@ func evalIndexExpression(array, index object.Object) object.Object {
 func evalArrayIndexExpression(array, index object.Object) object.Object {
 	arrayObject := array.(*object.Array)
 	idx := index.(*object.Integer).Value
-	max := int64(len(arrayObject.Elements) - 1)
+	max := int64(len(arrayObject.Elements))
 
-	if idx < 0 || idx > max {
+	if idx == 0 {
+		return newError("come on, you know arrays are 1-indexed")
+	}
+
+	if idx < 1 || idx > max {
 		return newError("index out of bounds")
 	}
 
-	return arrayObject.Elements[idx]
+	return arrayObject.Elements[idx-1]
 }
 
 func evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Object {

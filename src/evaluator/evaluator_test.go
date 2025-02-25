@@ -397,13 +397,13 @@ func TestArrayIndexExpressions(t *testing.T) {
 		input    string
 		expected interface{}
 	}{
-		{"(0)(1; 2; 3)", 1},
-		{"(1)(1; 2; 3)", 2},
-		{"(2)(1; 2; 3)", 3},
-		{"(1 + 1)(1; 2; 3)", 3},
-		{",(1; 2; 3) = myArray let\n(0)myArray", 1},
-		{",(1; 2; 3) = myArray let\n(1)myArray", 2},
-		{",(1; 2; 3) = myArray let\n(2)myArray", 3},
+		{"(1)(1; 2; 3)", 1},
+		{"(2)(1; 2; 3)", 2},
+		{"(3)(1; 2; 3)", 3},
+		{"(1 + 1 + 1)(1; 2; 3)", 3},
+		{",(1; 2; 3) = myArray let\n(1)myArray", 1},
+		{",(1; 2; 3) = myArray let\n(2)myArray", 2},
+		{",(1; 2; 3) = myArray let\n(3)myArray", 3},
 	}
 	for _, tt := range tests {
 		evaluated := utils.EvalTest(tt.input)
@@ -418,14 +418,24 @@ func TestArrayIndexExpressions(t *testing.T) {
 }
 
 func TestArrayIndexOutOfBounds(t *testing.T) {
-	input := "(3)(1; 2; 3)"
-	evaluated := utils.EvalTest(input)
-	errObj, ok := evaluated.(*object.Error)
-	if !ok {
-		t.Fatalf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"(4)(1; 2; 3)", "index out of bounds"},
+		{"(0)(1; 2; 3)", "come on, you know arrays are 1-indexed"},
+		{"(-1)(1; 2; 3)", "index out of bounds"},
 	}
-	if errObj.Message != "index out of bounds" {
-		t.Errorf("wrong error message. expected=%q, got=%q", "index out of bounds", errObj.Message)
+
+	for _, tt := range tests {
+		evaluated := utils.EvalTest(tt.input)
+		errObj, ok := evaluated.(*object.Error)
+		if !ok {
+			t.Fatalf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+		}
+		if errObj.Message != tt.expected {
+			t.Errorf("wrong error message. expected=%q, got=%q", "index out of bounds", errObj.Message)
+		}
 	}
 }
 

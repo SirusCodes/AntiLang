@@ -30,6 +30,7 @@ func execute(input string) int {
 	ast := p.ParseProgram()
 
 	if len(p.Errors()) != 0 {
+		fmt.Println("You are not AntiLang ready yet! Please fix the following errors:")
 		for _, msg := range p.Errors() {
 			fmt.Println(msg)
 		}
@@ -40,6 +41,7 @@ func execute(input string) int {
 	resp := evaluator.Eval(ast, env)
 
 	if resp != nil && resp.Type() == object.ERROR_OBJ {
+		fmt.Println("You are not AntiLang ready yet! Please fix the following error:")
 		fmt.Println(resp.Inspect())
 		return 1
 	}
